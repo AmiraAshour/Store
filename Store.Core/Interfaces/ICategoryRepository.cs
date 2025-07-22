@@ -1,0 +1,14 @@
+﻿using Store.Core.Entities.Product;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Store.Core.Interfaces
+{
+  public interface ICategoryRepository: IGenericReposeitry<Category>
+  {
+    // for future specific methods related to categories, if needed
+  }
+}
