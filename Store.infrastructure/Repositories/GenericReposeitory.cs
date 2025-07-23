@@ -18,13 +18,15 @@ namespace Store.infrastructure.Repositories
       await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
       var entity= await _context.Set<T>().FindAsync(id);
       if (entity != null){
         _context.Set<T>().Remove(entity);
         await _context.SaveChangesAsync();
+        return true;
       }
+      return false;
     }
 
     public async Task<IReadOnlyList<T>> GetAllAsync()
@@ -57,11 +59,13 @@ namespace Store.infrastructure.Repositories
       return entity!;
     }
 
-    public async Task UpdateAsync(T entity)
+    public async Task<bool> UpdateAsync(T entity)
     {
-      _context.Entry(entity).State = EntityState.Modified;
       _context.Set<T>().Update(entity);
-      await _context.SaveChangesAsync();
+      var affectedRows = await _context.SaveChangesAsync();
+
+      return affectedRows > 0; 
     }
+
   }
 }
