@@ -1,6 +1,7 @@
 ﻿
 
 using Store.Core.Interfaces;
+using Store.Core.Interfaces.RepositoriesInterFaces;
 using Store.infrastructure.Data;
 
 namespace Store.infrastructure.Repositories

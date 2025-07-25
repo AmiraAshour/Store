@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Store.Core.Interfaces;
+using Store.Core.Entities.Product;
+using Store.Core.Interfaces.RepositoriesInterFaces;
 using Store.infrastructure.Data;
 using System.Linq.Expressions;
 
@@ -12,10 +13,18 @@ namespace Store.infrastructure.Repositories
     {
       _context = context;
     }
-    public async Task AddAsync(T entity)
+    public async Task<T?> AddAsync(T entity)
     {
-      await _context.Set<T>().AddAsync(entity);
-      await _context.SaveChangesAsync();
+      try
+      {
+        await _context.Set<T>().AddAsync(entity);
+        var result = await _context.SaveChangesAsync();
+        return result > 0 ? entity : null;
+      }
+      catch
+      {
+        return null;
+      }
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -59,12 +68,12 @@ namespace Store.infrastructure.Repositories
       return entity!;
     }
 
-    public async Task<bool> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity)
     {
       _context.Set<T>().Update(entity);
-      var affectedRows = await _context.SaveChangesAsync();
+      await _context.SaveChangesAsync();
 
-      return affectedRows > 0; 
+      return entity; 
     }
 
   }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.RepositoriesInterFaces
 {
   public interface IGenericReposeitry<T> where T : class
   {
@@ -13,8 +13,8 @@ namespace Store.Core.Interfaces
     Task<IReadOnlyList<T>> GetAllAsync ( params Expression< Func<T, object>>[] includes);
     Task<T> GetByIdAsync(int id);
     Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
-    Task   AddAsync(T entity);
-    Task<bool> UpdateAsync(T entity);
+    Task <T?>  AddAsync(T entity);
+    Task<T> UpdateAsync(T entity);
     Task<bool> DeleteAsync(int id);
   }
 }

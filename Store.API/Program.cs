@@ -1,13 +1,21 @@
 
 using Microsoft.OpenApi.Models;
 using Store.API.Middleware;
+using Store.Core;
+using Store.Core.Interfaces;
+using Store.Core.Services;
 using Store.infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-object value = builder.Services.InfrasturctureConfiguration(builder.Configuration);
+
+builder.Services.InfrasturctureConfiguration(builder.Configuration);
+
+//builder.Services.CoreConfiguration();
+builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
 
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();

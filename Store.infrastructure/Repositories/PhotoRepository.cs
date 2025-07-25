@@ -1,5 +1,5 @@
 ﻿using Store.Core.Entities.Product;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.RepositoriesInterFaces;
 using Store.infrastructure.Data;
 using System;
 using System.Collections.Generic;

@@ -2,7 +2,7 @@
 using Store.Core.DTO;
 using Store.Core.Entities.Product;
 
-namespace Store.API.Mapping
+namespace Store.Core.Mapping
 {
   public class CategoryMappingcs:Profile
   {

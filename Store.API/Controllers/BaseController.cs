@@ -8,15 +8,6 @@ namespace Store.API.Controllers
   [ApiController]
   public class BaseController : ControllerBase
   {
-    protected readonly IUnitOfWork Work;
-    protected readonly IMapper mapper;
 
-  
-
-    public BaseController(IUnitOfWork unitOfWork, IMapper mapper)
-    {
-      Work = unitOfWork;
-      this.mapper = mapper;
-    }
   }
 }

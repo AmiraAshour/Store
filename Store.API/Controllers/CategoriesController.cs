@@ -1,51 +1,51 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Store.API.Helper;
 using Store.Core.DTO;
-using Store.Core.Entities.Product;
 using Store.Core.Interfaces;
 
 namespace Store.API.Controllers
 {
   public class CategoriesController : BaseController
   {
-    public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+    private readonly ICategoriesService _categoriesService;
+    public CategoriesController(ICategoriesService categoriesService) 
     {
+      _categoriesService = categoriesService;
     }
 
     [HttpGet("get-all")]
     public async Task<IActionResult> get()
     {
-        var category = await Work.CategoryRepository.GetAllAsync();
-        if (category == null || !category.Any())
-        {
-          return NotFound("No categories found.");
-        }
-        return Ok(category);
-
+      var categories = await _categoriesService.GetAllCategoryAsync();
+      if (categories == null || !categories.Any())
+      {
+        return ApiResponseHelper.NotFound("No categories found.");
+      }
+      return ApiResponseHelper.Success(categories, "Categories retrieved successfully.");
     }
 
     [HttpGet("get-by-id/{id}")]
     public async Task<IActionResult> getById(int id)
     {
-      var category = await Work.CategoryRepository.GetByIdAsync(id);
+      var category = await _categoriesService.GetCategoryByIdAsync(id);
       if (category == null)
       {
-        return NotFound($"Category with ID {id} not found.");
+        return ApiResponseHelper.NotFound($"Category with ID {id} not found.");
       }
-      return Ok(category);
+      return ApiResponseHelper.Success(category, "Category retrieved successfully.");
     }
-    [HttpPost("add-category")]
-    public async Task<IActionResult> addCategory( CategoryDTO categoryDto)
-    {
-      if (categoryDto == null)
-      {
-        return BadRequest("Category data is required.");
-      }
-      var category = mapper.Map<Category>(categoryDto);
 
-       await Work.CategoryRepository.AddAsync(category);
+    [HttpPost("add-category")]
+    public async Task<IActionResult> addCategory(CategoryDTO categoryDto)
+    {
     
-      return Ok(new { Message="Item has been added", category });
+      var addedCategory = await _categoriesService.AddCategoryAsync(categoryDto);
+
+      if (addedCategory == null)
+        return ApiResponseHelper.BadRequest("Failed to add category.");
+      return ApiResponseHelper.Created(addedCategory, "Category created successfully.");
+
     }
 
     [HttpPut("update-category")]
@@ -53,18 +53,17 @@ namespace Store.API.Controllers
     {
       if (categoryDto == null || categoryDto.Id <= 0)
       {
-        return BadRequest("Valid category data is required.");
+        return ApiResponseHelper.BadRequest("Valid category data is required.");
       }
-      var category = mapper.Map<Category>(categoryDto);
 
-      var resulte= await Work.CategoryRepository.UpdateAsync(category);
-      if (!resulte)
+      var result = await _categoriesService.UpdateCategoryAsync(categoryDto);
+
+      if (result is null)
       {
-        return NotFound($"Category with ID {categoryDto.Id} not found.");
+        return ApiResponseHelper.NotFound($"Category with ID {categoryDto.Id} not found.");
       }
-      
-      
-      return Ok(new { Message="Item has been updated", category });
+
+      return ApiResponseHelper.Success(result, "Category has been updated successfully.");
     }
 
     [HttpDelete("delete-category/{id}")]
@@ -72,14 +71,16 @@ namespace Store.API.Controllers
     {
       if (id <= 0)
       {
-        return BadRequest("Valid category ID is required.");
+        return ApiResponseHelper.BadRequest("Valid category ID is required.");
       }
-     var result= await Work.CategoryRepository.DeleteAsync(id);
-      if(!result)
+
+      var result = await _categoriesService.DeleteCategoryAsync(id);
+      if (!result)
       {
-        return NotFound($"Category with ID {id} not found.");
+        return ApiResponseHelper.NotFound($"Category with ID {id} not found.");
       }
-      return Ok(new { Message = "Item has been deleted" });
+
+      return ApiResponseHelper.Success<string>(null, "Category has been deleted successfully.");
     }
   }
 }

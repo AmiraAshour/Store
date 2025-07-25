@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.RepositoriesInterFaces
 {
   public interface ICategoryRepository: IGenericReposeitry<Category>
   {
