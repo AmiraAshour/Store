@@ -66,7 +66,6 @@ namespace Store.infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -77,6 +76,20 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Photos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageName = "laptop1.jpg",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageName = "phone1.jpg",
+                            ProductId = 2
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
@@ -100,7 +113,10 @@ namespace Store.infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("NewPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OldPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -116,7 +132,8 @@ namespace Store.infrastructure.Migrations
                             CategoryId = 1,
                             Description = "Gaming laptop",
                             Name = "Laptop",
-                            Price = 25000m
+                            NewPrice = 25000m,
+                            OldPrice = 0m
                         },
                         new
                         {
@@ -124,7 +141,8 @@ namespace Store.infrastructure.Migrations
                             CategoryId = 2,
                             Description = "Fiction book",
                             Name = "Novel",
-                            Price = 150m
+                            NewPrice = 150m,
+                            OldPrice = 0m
                         });
                 });
 

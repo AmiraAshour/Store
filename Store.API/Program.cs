@@ -1,4 +1,5 @@
 
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Store.API.Middleware;
 using Store.Core;
@@ -16,6 +17,11 @@ builder.Services.InfrasturctureConfiguration(builder.Configuration);
 //builder.Services.CoreConfiguration();
 builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<IPhotosService, PhotosService>();
+
+builder.Services.AddSingleton<IFileProvider>(
+    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+);
 
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();

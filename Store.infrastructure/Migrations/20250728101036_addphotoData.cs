@@ -7,18 +7,18 @@
 namespace Store.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddSeedDataToPoduct : Migration
+    public partial class addphotoData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "CategoryId", "Description", "Name", "Price" },
+                table: "Photos",
+                columns: new[] { "Id", "ImageName", "ProductId" },
                 values: new object[,]
                 {
-                    { 1, 1, "Gaming laptop", "Laptop", 25000m },
-                    { 2, 2, "Fiction book", "Novel", 150m }
+                    { 1, "laptop1.jpg", 1 },
+                    { 2, "phone1.jpg", 2 }
                 });
         }
 
@@ -26,12 +26,12 @@ namespace Store.infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Products",
+                table: "Photos",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "Products",
+                table: "Photos",
                 keyColumn: "Id",
                 keyValue: 2);
         }

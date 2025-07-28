@@ -11,8 +11,8 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250720151941_updat")]
-    partial class updat
+    [Migration("20250728135625_updatProduct")]
+    partial class updatProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,20 @@ namespace Store.infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Electronic laptops",
+                            Name = "Laptops"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Smart mobile phones",
+                            Name = "Phones"
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>
@@ -55,7 +69,6 @@ namespace Store.infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -66,6 +79,20 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Photos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageName = "laptop1.jpg",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageName = "phone1.jpg",
+                            ProductId = 2
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
@@ -89,7 +116,10 @@ namespace Store.infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("NewPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OldPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -97,6 +127,26 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Description = "Gaming laptop",
+                            Name = "Laptop",
+                            NewPrice = 25000m,
+                            OldPrice = 0m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Description = "Fiction book",
+                            Name = "Novel",
+                            NewPrice = 150m,
+                            OldPrice = 0m
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>

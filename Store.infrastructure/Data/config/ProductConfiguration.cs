@@ -21,14 +21,11 @@ namespace Store.infrastructure.Data.config
         .IsRequired()
         .HasMaxLength(500);
       
-      builder.Property(x => x.Price)
+      builder.Property(x => x.NewPrice)
         .IsRequired()
         .HasColumnType("decimal(18,2)");
       
-      builder.HasMany(x => x.Photos)
-        .WithOne(x => x.Product)
-        .HasForeignKey(x => x.ProductId)
-        .OnDelete(DeleteBehavior.Cascade);
+    
       
 
       builder.HasData(
@@ -37,7 +34,7 @@ namespace Store.infrastructure.Data.config
           Id = 1,
           Name = "Laptop",
           Description = "Gaming laptop",
-          Price = 25000,
+          NewPrice = 25000,
           CategoryId = 1 
         },
     new Product
@@ -45,7 +42,7 @@ namespace Store.infrastructure.Data.config
       Id = 2,
       Name = "Novel",
       Description = "Fiction book",
-      Price = 150,
+      NewPrice = 150,
       CategoryId = 2
     }
     );
@@ -53,3 +50,4 @@ namespace Store.infrastructure.Data.config
     }
   }
 }
+  

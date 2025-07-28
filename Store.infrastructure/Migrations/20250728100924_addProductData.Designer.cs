@@ -11,8 +11,8 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250722101346_AddSeedData")]
-    partial class AddSeedData
+    [Migration("20250728100924_addProductData")]
+    partial class addProductData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,6 @@ namespace Store.infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -111,6 +110,24 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Description = "Gaming laptop",
+                            Name = "Laptop",
+                            Price = 25000m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Description = "Fiction book",
+                            Name = "Novel",
+                            Price = 150m
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>

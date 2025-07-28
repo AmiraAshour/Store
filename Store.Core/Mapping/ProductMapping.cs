@@ -7,8 +7,18 @@ namespace Store.Core.Mapping
   public class ProductMapping:Profile
   {
     public ProductMapping() {
-      CreateMap<ProductDTO,Product>().ReverseMap();
-      CreateMap<UpdateProductDTO,Product>().ReverseMap();
+      CreateMap<Product, ProductDTO>()
+        .ForMember(x => x.CategoryName,
+        op => op.MapFrom(src => src.Category.Name))
+        .ReverseMap();
+      
+      CreateMap<Photo, PhotoDTO>().ReverseMap();
+
+      CreateMap<AddProductDTO,Product>()
+        .ForMember(d => d.Photos, op => op.Ignore()).ReverseMap();
+
+      CreateMap<UpdateProductDTO,Product>()
+        .ForMember(d=>d.Photos,s=>s.Ignore()).ReverseMap();
     }
   }
 }

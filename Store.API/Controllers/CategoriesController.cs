@@ -14,8 +14,8 @@ namespace Store.API.Controllers
       _categoriesService = categoriesService;
     }
 
-    [HttpGet("get-all")]
-    public async Task<IActionResult> get()
+    [HttpGet]
+    public async Task<IActionResult> GetCategories()
     {
       var categories = await _categoriesService.GetAllCategoryAsync();
       if (categories == null || !categories.Any())
@@ -25,8 +25,8 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(categories, "Categories retrieved successfully.");
     }
 
-    [HttpGet("get-by-id/{id}")]
-    public async Task<IActionResult> getById(int id)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> getCategory(int id)
     {
       var category = await _categoriesService.GetCategoryByIdAsync(id);
       if (category == null)
@@ -36,8 +36,8 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(category, "Category retrieved successfully.");
     }
 
-    [HttpPost("add-category")]
-    public async Task<IActionResult> addCategory(CategoryDTO categoryDto)
+    [HttpPost]
+    public async Task<IActionResult> PostCategory(CategoryDTO categoryDto)
     {
     
       var addedCategory = await _categoriesService.AddCategoryAsync(categoryDto);
@@ -48,8 +48,8 @@ namespace Store.API.Controllers
 
     }
 
-    [HttpPut("update-category")]
-    public async Task<IActionResult> updateCategory(UpdateCategoryDTO categoryDto)
+    [HttpPut]
+    public async Task<IActionResult> PutCategory(UpdateCategoryDTO categoryDto)
     {
       if (categoryDto == null || categoryDto.Id <= 0)
       {
@@ -66,7 +66,7 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(result, "Category has been updated successfully.");
     }
 
-    [HttpDelete("delete-category/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> deleteCategory(int id)
     {
       if (id <= 0)

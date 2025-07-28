@@ -18,7 +18,7 @@ namespace Store.API.Controllers
 
     // GET: api/<ProductController>
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetProducts()
     {
       var products= await _productService.GetAllProductsAsync();
       if (products == null || !products.Any())
@@ -30,7 +30,7 @@ namespace Store.API.Controllers
 
     // GET api/<ProductController>/5
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetProduct(int id)
     {
       var product =await _productService.GetProductByIdAsync(id);
       if (product == null)
@@ -42,7 +42,7 @@ namespace Store.API.Controllers
 
     // POST api/<ProductController>
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody]ProductDTO productDTO)
+    public async Task<IActionResult> PostProduct(AddProductDTO productDTO)
     {
       var result =await _productService.AddProductAsync(productDTO);
       if (result == null)
@@ -53,8 +53,8 @@ namespace Store.API.Controllers
     }
 
     // PUT api/<ProductController>/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Put(UpdateProductDTO productDTO)
+    [HttpPut]
+    public async Task<IActionResult> PutProduct(UpdateProductDTO productDTO)
     {
       if (productDTO == null || productDTO.Id <= 0)
       {
@@ -70,7 +70,7 @@ namespace Store.API.Controllers
 
     // DELETE api/<ProductController>/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteProduct(int id)
     {
       if (id <= 0)
       {

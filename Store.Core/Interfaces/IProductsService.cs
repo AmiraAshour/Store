@@ -10,20 +10,6 @@ namespace Store.Core.Interfaces
 {
   public interface IProductsService
   {
-    /// <summary>
-    /// Adds a new product to the database.
-    /// </summary>
-    /// <param name="product">The product to add.</param>
-    /// <returns>The added product.</returns>
-    Task<Product?> AddProductAsync(ProductDTO? product);
-   
-    /// <summary>
-    /// Deletes a product from the database.
-    /// </summary>
-    /// <param name="id">The ID of the product to delete.</param>
-    /// <returns>A boolean indicating whether the deletion was successful.</returns>
-    Task<bool> DeleteProductAsync(int id);
-   
 
     /// <summary>
     /// Asynchronously retrieves all products.
@@ -34,7 +20,7 @@ namespace Store.Core.Interfaces
     /// </remarks>
     /// <returns>A task that represents the asynchronous operation. The task result contains an  IEnumerable{T} of Product objects representing all available products.
     /// </returns>
-    Task<IEnumerable<Product>?> GetAllProductsAsync();
+    Task<IEnumerable<ProductDTO>?> GetAllProductsAsync();
 
 
     /// <summary>
@@ -45,7 +31,21 @@ namespace Store.Core.Interfaces
     /// <param name="id">The unique identifier of the product to retrieve. Must be a positive integer.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="Product"/> object
     /// corresponding to the specified identifier, or <see langword="null"/> if no product is found.</returns>
-    Task<Product?> GetProductByIdAsync(int id);
+    Task<ProductDTO?> GetProductByIdAsync(int id);
+    /// <summary>
+    /// Adds a new product to the database.
+    /// </summary>
+    /// <param name="product">The product to add.</param>
+    /// <returns>The added product.</returns>
+    Task<ProductDTO?> AddProductAsync(AddProductDTO? product);
+   
+    /// <summary>
+    /// Deletes a product from the database.
+    /// </summary>
+    /// <param name="id">The ID of the product to delete.</param>
+    /// <returns>A boolean indicating whether the deletion was successful.</returns>
+    Task<bool> DeleteProductAsync(int id);
+   
 
     /// <summary>
     /// Updates the specified product in the system.
@@ -55,6 +55,6 @@ namespace Store.Core.Interfaces
     /// <param name="product">The product to update. The product must have a valid identifier and contain the updated details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the updated product with the latest
     /// details as stored in the system.</returns>
-    Task<Product?> UpdateProductAsync(UpdateProductDTO? product);
+    Task<ProductDTO?> UpdateProductAsync(UpdateProductDTO? product);
   }
 }

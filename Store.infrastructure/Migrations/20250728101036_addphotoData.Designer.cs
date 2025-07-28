@@ -11,8 +11,8 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250720151428_init")]
-    partial class init
+    [Migration("20250728101036_addphotoData")]
+    partial class addphotoData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,20 @@ namespace Store.infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Electronic laptops",
+                            Name = "Laptops"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Smart mobile phones",
+                            Name = "Phones"
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>
@@ -55,7 +69,6 @@ namespace Store.infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -66,6 +79,20 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Photos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageName = "laptop1.jpg",
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageName = "phone1.jpg",
+                            ProductId = 2
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
@@ -97,6 +124,24 @@ namespace Store.infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Description = "Gaming laptop",
+                            Name = "Laptop",
+                            Price = 25000m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Description = "Fiction book",
+                            Name = "Novel",
+                            Price = 150m
+                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>
