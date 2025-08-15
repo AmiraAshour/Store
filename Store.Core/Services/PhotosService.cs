@@ -15,7 +15,7 @@ namespace Store.Core.Services
     {
       var saveImageSrc=new List<string>();
       var directory=Path.Combine("wwwroot", "images",src);
-      if(Directory.Exists(directory))
+      if(!Directory.Exists(directory))
         Directory.CreateDirectory(directory);
 
       foreach (var file in files)

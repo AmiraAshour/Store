@@ -27,7 +27,7 @@ namespace Store.Core.Interfaces
     /// </summary>
     /// <returns>Returns all categories </returns>
 
-    Task<IEnumerable<Category>> GetAllCategoryAsync();
+    IEnumerable<Category> GetAllCategory();
 
 
     /// <summary>

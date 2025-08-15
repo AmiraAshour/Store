@@ -2,6 +2,7 @@
 using Store.Core.DTO;
 using Store.Core.Entities.Product;
 using Store.Core.Interfaces;
+using Store.Core.Shared;
 namespace Store.Core.Services
 {
   public class ProductsService : IProductsService
@@ -16,11 +17,45 @@ namespace Store.Core.Services
       _mapper = mapper;
       _photosService = photosService;
     }
-    public async Task<IEnumerable<ProductDTO>?> GetAllProductsAsync()
+    public async Task<IEnumerable<ProductDTO>?> GetAllProductsAsync(ProductParams param )
     {
-      var products =await _unitOfWork.ProductRepository
-        .GetAllAsync(x=>x.Category,x=> x.Photos);
-     var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+      var products = _unitOfWork.ProductRepository
+        .GetAll(x=>x.Category,x=> x.Photos);
+      if (products == null)
+        return null;
+
+      //filter by word
+      if (!string.IsNullOrEmpty(param.Search))
+      {
+        var searchTerm = param.Search.Split(" ");
+        products = products.Where(p => searchTerm.Any(word=>
+        p.Name.ToLower().Contains(word.ToLower())||
+        p.Description.ToLower().Contains(word.ToLower())
+        ));
+      }
+
+      //filter by categoryid
+      if (param.CategoryId.HasValue )
+      {
+        products = products.Where(p => p.CategoryId == param.CategoryId);
+      }
+
+      //sort 
+      products = param.Sort switch
+      {
+        Enum.SortOptions.ASC => products.OrderBy(p => p.NewPrice),
+        Enum.SortOptions.DESC => products.OrderByDescending(p => p.NewPrice),
+        _ => products.OrderBy(p => p.Name)
+      };
+
+      param.TotatlCount = products.Count();
+
+      products = products
+        .Skip((param.PageNumber - 1) * param.pageSize)
+        .Take(param.pageSize);
+
+      var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
       return productDTOs;
     }
 
@@ -41,11 +76,11 @@ namespace Store.Core.Services
           return null;
       var entity = _mapper.Map<Product>(productDTO);
 
+      var ImagePath=await _photosService.AddPhotoAsync(productDTO.Photos,productDTO.Name!);
+
       var product= await _unitOfWork.ProductRepository.AddAsync(entity);
       if (product == null)
           return null;
-
-      var ImagePath=await _photosService.AddPhotoAsync(productDTO.Photos,productDTO.Name!);
 
       var photos = ImagePath.Select(x => new Photo
       {
@@ -78,7 +113,7 @@ namespace Store.Core.Services
       { 
         if(item.ImageName == null)
           continue;
-        _photosService.DeletePhoto(Path.Combine("images", item.ImageName));
+        _photosService.DeletePhoto( item.ImageName);
       }
         await _unitOfWork.PhotoRepository.DeleteRangeAsync(findPhotos);
       }
@@ -102,10 +137,6 @@ namespace Store.Core.Services
 
     public async Task<bool> DeleteProductAsync(int id)
     {
-      if (id <= 0)
-      {
-        throw new ArgumentException("Product ID must be greater than zero.", nameof(id));
-      }
       var findPhotos = await _unitOfWork.PhotoRepository.GetPhotosByProductIdAsync(id);
       if (findPhotos != null)
       {
@@ -113,9 +144,8 @@ namespace Store.Core.Services
         {
           if (item.ImageName == null)
             continue;
-          _photosService.DeletePhoto(Path.Combine("images", item.ImageName));
+          _photosService.DeletePhoto( item.ImageName);
         }
-        await _unitOfWork.PhotoRepository.DeleteRangeAsync(findPhotos);
       }
       return await _unitOfWork.ProductRepository.DeleteAsync(id);
     }

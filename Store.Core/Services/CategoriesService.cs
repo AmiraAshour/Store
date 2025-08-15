@@ -34,9 +34,9 @@ namespace Store.Core.Services
 
       return await _unitOfWork.CategoryRepository.UpdateAsync(existing);
     }
-    public async Task<IEnumerable<Category>> GetAllCategoryAsync()
+    public IEnumerable<Category> GetAllCategory()
     {
-      return await _unitOfWork.CategoryRepository.GetAllAsync();
+      return  _unitOfWork.CategoryRepository.GetAll().ToList();
     }
 
     public async Task<Category?> GetCategoryByIdAsync(int id)

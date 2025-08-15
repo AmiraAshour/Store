@@ -2,6 +2,7 @@
 using Store.API.Helper;
 using Store.Core.DTO;
 using Store.Core.Interfaces;
+using Store.Core.Shared;
 
 
 namespace Store.API.Controllers
@@ -18,14 +19,14 @@ namespace Store.API.Controllers
 
     // GET: api/<ProductController>
     [HttpGet]
-    public async Task<IActionResult> GetProducts()
+    public async Task<IActionResult> GetProducts([FromQuery]ProductParams param)
     {
-      var products= await _productService.GetAllProductsAsync();
+      var products= await _productService.GetAllProductsAsync(param);
       if (products == null || !products.Any())
       {
         return ApiResponseHelper.NotFound("No Product found.");
       }
-      return ApiResponseHelper.Success(products, "Categories retrieved successfully.");
+      return ApiResponseHelper.Success(new Pagination<ProductDTO>(param.PageNumber,param.pageSize,param.pageSize,products.ToList()), "Categories retrieved successfully.");
     }
 
     // GET api/<ProductController>/5

@@ -15,9 +15,9 @@ namespace Store.API.Controllers
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCategories()
+    public  IActionResult GetCategories()
     {
-      var categories = await _categoriesService.GetAllCategoryAsync();
+      var categories =  _categoriesService.GetAllCategory();
       if (categories == null || !categories.Any())
       {
         return ApiResponseHelper.NotFound("No categories found.");

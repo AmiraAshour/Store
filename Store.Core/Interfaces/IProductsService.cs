@@ -1,5 +1,6 @@
 ﻿using Store.Core.DTO;
 using Store.Core.Entities.Product;
+using Store.Core.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Store.Core.Interfaces
     /// </remarks>
     /// <returns>A task that represents the asynchronous operation. The task result contains an  IEnumerable{T} of Product objects representing all available products.
     /// </returns>
-    Task<IEnumerable<ProductDTO>?> GetAllProductsAsync();
+    Task<IEnumerable<ProductDTO>?> GetAllProductsAsync(ProductParams param);
 
 
     /// <summary>

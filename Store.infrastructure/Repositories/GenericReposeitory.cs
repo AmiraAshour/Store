@@ -15,16 +15,10 @@ namespace Store.infrastructure.Repositories
     }
     public async Task<T?> AddAsync(T entity)
     {
-      try
-      {
         await _context.Set<T>().AddAsync(entity);
         var result = await _context.SaveChangesAsync();
         return result > 0 ? entity : null;
-      }
-      catch
-      {
-        return null;
-      }
+     
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -38,17 +32,17 @@ namespace Store.infrastructure.Repositories
       return false;
     }
 
-    public async Task<IReadOnlyList<T>> GetAllAsync()
-   => await _context.Set<T>().AsNoTracking().ToListAsync();
+    public IQueryable<T>? GetAll()
+   =>  _context.Set<T>().AsNoTracking();
 
-    public async Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+    public  IQueryable<T>? GetAll(params Expression<Func<T, object>>[] includes)
     {
       var query = _context.Set<T>().AsQueryable();
       foreach (var include in includes)
       {
         query = query.Include(include);
       }
-      return await query.AsNoTracking().ToListAsync();
+      return  query.AsNoTracking();
     }
 
     public async Task<T> GetByIdAsync(int id)
