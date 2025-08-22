@@ -25,6 +25,10 @@ namespace Store.infrastructure.Data.config
         .IsRequired()
         .HasColumnType("decimal(18,2)");
       
+      
+      builder.Property(x => x.OldPrice)
+        .HasColumnType("decimal(18,2)");
+      
     
       
 

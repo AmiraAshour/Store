@@ -1,13 +1,21 @@
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using Store.API.Helper;
 using Store.API.Middleware;
 using Store.Core;
+using Store.Core.Entities;
 using Store.Core.Interfaces;
 using Store.Core.Services;
 using Store.infrastructure;
+using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,21 +32,76 @@ builder.Services.AddCors(options =>
 
 builder.Services.InfrasturctureConfiguration(builder.Configuration);
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddSingleton<IConnectionMultiplexer>(i =>
 {
   var configuration = ConfigurationOptions.Parse("localhost:6379");
   return ConnectionMultiplexer.Connect(configuration);
 });
 
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+  options.Password.RequireDigit = true;
+  options.Password.RequiredLength = 6;
+  options.Password.RequireLowercase = true;
+  options.Password.RequireUppercase = false;
+  options.Password.RequireNonAlphanumeric = false;
+}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
 //builder.Services.CoreConfiguration();
 builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IPhotosService, PhotosService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddSingleton<IFileProvider>(
     new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
 );
+
+
+
+builder.Services.AddAuthentication(op =>
+{
+  op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  op.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(o =>
+{
+  o.Cookie.Name = "token";
+  o.Events.OnRedirectToLogin = context =>
+  {
+    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+    return Task.CompletedTask;
+  };
+}).AddJwtBearer(op=>
+{
+  op.RequireHttpsMetadata = false;
+  op.SaveToken = true;
+  op.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+    ValidateIssuer = true,
+    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+    ValidateAudience = false,
+    ValidateLifetime = true,
+    ClockSkew = TimeSpan.Zero
+  };
+  op.Events = new JwtBearerEvents
+  {
+    OnMessageReceived = context =>
+    {
+      if (context.Request.Cookies.ContainsKey("token"))
+      {
+        context.Token = context.Request.Cookies["token"];
+      }
+      return Task.CompletedTask;
+    }
+  };
+});
 
 // Register the Swagger services
 builder.Services.AddEndpointsApiExplorer();
@@ -69,6 +132,9 @@ app.UseCors("CORSPolicy");
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseExceptionMiddleware();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -76,7 +142,6 @@ app.UseSwaggerUI(c =>
 });
 
 
-app.UseAuthorization();
 
 app.MapControllers();
 

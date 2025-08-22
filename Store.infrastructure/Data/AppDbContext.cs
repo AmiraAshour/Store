@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Store.Core.Entities;
 using Store.Core.Entities.Product;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Store.infrastructure.Data
 {
-  public class AppDbContext : DbContext
+  public class AppDbContext : IdentityDbContext
   {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -17,6 +19,7 @@ namespace Store.infrastructure.Data
     public DbSet<Product> Products { get; set; }
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       base.OnModelCreating(modelBuilder);
