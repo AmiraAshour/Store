@@ -1,0 +1,11 @@
+﻿using Store.Core.Entities.Order;
+
+namespace Store.Core.Interfaces.RepositoriesInterfaces
+{
+  public interface IOrdersRepository
+  {
+    Task<Orders> AddOrederAsync(Orders oreder);
+    Task<IReadOnlyList<Orders>> GetAllOrdersForUserAsync(string BuyerEmail);
+    Task<Orders?> GetOrderByIdAsync(int Id, string BuyerEmail);
+  }
+}

@@ -1,4 +1,4 @@
-﻿using Store.Core.DTO;
+﻿using Store.Core.DTO.Product;
 using Store.Core.Entities.Product;
 using Store.Core.Shared;
 using System;

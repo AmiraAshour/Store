@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Store.Core.DTO;
+using Store.Core.DTO.Category;
 using Store.Core.Entities.Product;
 
 namespace Store.Core.Mapping

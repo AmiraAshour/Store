@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.DTO;
+using Store.Core.DTO.Product;
 using Store.Core.Interfaces;
 using Store.Core.Shared;
 

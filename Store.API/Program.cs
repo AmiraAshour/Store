@@ -6,9 +6,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using Store.API.Helper;
 using Store.API.Middleware;
-using Store.Core;
 using Store.Core.Entities;
 using Store.Core.Interfaces;
 using Store.Core.Services;
@@ -54,6 +52,7 @@ builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IPhotosService, PhotosService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -67,15 +66,6 @@ builder.Services.AddAuthentication(op =>
 {
   op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
   op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-  op.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(o =>
-{
-  o.Cookie.Name = "token";
-  o.Events.OnRedirectToLogin = context =>
-  {
-    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-    return Task.CompletedTask;
-  };
 }).AddJwtBearer(op=>
 {
   op.RequireHttpsMetadata = false;
@@ -84,8 +74,8 @@ builder.Services.AddAuthentication(op =>
   {
     ValidateIssuerSigningKey = true,
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-    ValidateIssuer = true,
-    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+    ValidateIssuer = false,
+    //ValidIssuer = builder.Configuration["Jwt:Issuer"],
     ValidateAudience = false,
     ValidateLifetime = true,
     ClockSkew = TimeSpan.Zero

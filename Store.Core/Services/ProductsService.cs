@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Store.Core.DTO;
+using Store.Core.DTO.Product;
 using Store.Core.Entities.Product;
 using Store.Core.Interfaces;
 using Store.Core.Shared;

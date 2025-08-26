@@ -14,6 +14,8 @@ namespace Store.Core.Interfaces
     string GenerateAccessToken(AppUser user);
     Task<string> GenerateRefreshTokenAsync(AppUser user);
     Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken, string email);
+    Task<bool> UpdateAddressAsync(string email, AddressDTO address);
+    Task<Address?> GetAddressAsync(string email);
 
   }
 }

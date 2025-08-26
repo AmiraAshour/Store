@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.DTO
+namespace Store.Core.DTO.Category
 {
   public class CategoryDTO
   {

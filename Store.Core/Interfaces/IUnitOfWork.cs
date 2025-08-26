@@ -1,4 +1,5 @@
-﻿using Store.Core.Interfaces.RepositoriesInterFaces;
+﻿using Store.Core.Interfaces.RepositoriesInterfaces;
+using Store.Core.Interfaces.RepositoriesInterFaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace Store.Core.Interfaces
     public IProductRepository ProductRepository { get; }
     public IPhotoRepository PhotoRepository { get; }
     public IBasketRepository BasketRepository { get; }
+    public IDeliveryMethodRepository DeliveryMethodRepository  { get; }
+    public IOrdersRepository OrdersRepository { get; }
+    public IAddressRepository AddressRepository { get; }
   }
 }

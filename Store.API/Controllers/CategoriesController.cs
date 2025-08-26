@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.DTO;
+using Store.Core.DTO.Category;
 using Store.Core.Interfaces;
 
 namespace Store.API.Controllers

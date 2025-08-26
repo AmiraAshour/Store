@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250823122826_AddOrdersTables")]
+    partial class AddOrdersTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,24 +296,6 @@ namespace Store.infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("deliveryMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DeliveryTime = "1-2 days",
-                            Description = "Fast delivery",
-                            Name = "Fast",
-                            Price = 10m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DeliveryTime = "5-7 days",
-                            Description = "Economy delivery",
-                            Name = "Slow",
-                            Price = 5m
-                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Order.OrderItem", b =>
@@ -369,6 +354,9 @@ namespace Store.infrastructure.Migrations
 
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("deliveryMethodId")
                         .HasColumnType("int");

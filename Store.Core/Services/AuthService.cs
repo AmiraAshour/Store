@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using StackExchange.Redis;
 using Store.Core.DTO.Account;
 using Store.Core.Entities;
 using Store.Core.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,16 +18,22 @@ namespace Store.Core.Services
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IConfiguration _config;
     private readonly IEmailService _emailSender;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
     public AuthService(UserManager<AppUser> userManager,
                        SignInManager<AppUser> signInManager,
                        IConfiguration config,
-                       IEmailService emailSender)
+                       IEmailService emailSender,
+                       IUnitOfWork unitOfWork,
+                       IMapper mapper)
     {
       _userManager = userManager;
       _signInManager = signInManager;
       _config = config;
       _emailSender = emailSender;
+      _unitOfWork = unitOfWork;
+      _mapper = mapper;
     }
 
     public async Task<AuthResultDTO> RegisterAsync(RegisterDTO model)
@@ -151,7 +156,7 @@ namespace Store.Core.Services
             };
 
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var tokenDescriptor = new SecurityTokenDescriptor
       {
@@ -190,6 +195,24 @@ namespace Store.Core.Services
         return null;
       return user;
     }
+
+    public async Task<bool> UpdateAddressAsync(string email, AddressDTO addressDTO)
+    {
+      var address=_mapper.Map<Address>(addressDTO);
+      var existingAddress = await _unitOfWork.AddressRepository.GetAddressAsync(email);
+      if (existingAddress is null)
+      {
+         address.AppUser.Email = email;
+        return await _unitOfWork.AddressRepository.AddAddressAsync(address) is not null;
+      }
+      address.Id = existingAddress.Id;  
+      return await _unitOfWork.AddressRepository.UpdateAddressAsync( address) is not null;
+    }
+    public async Task<Address?> GetAddressAsync(string email)
+    {
+      return await _unitOfWork.AddressRepository.GetAddressAsync(email);
+    }
+
   }
 
 }

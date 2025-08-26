@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.DTO;
+using Store.Core.DTO.Order;
 using Store.Core.Entities;
 using Store.Core.Interfaces;
 using Store.infrastructure.Repositories;

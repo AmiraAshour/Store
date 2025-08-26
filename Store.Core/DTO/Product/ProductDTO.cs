@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Store.Core.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.DTO
+namespace Store.Core.DTO.Product
 {
-  public class AddProductDTO
+  public class ProductDTO
   {
 
     [Required(ErrorMessage = "Name is required.")]
@@ -18,17 +18,17 @@ namespace Store.Core.DTO
     [StringLength(300, ErrorMessage = "Description must be less than 300 characters.")]
     public string? Description { get; set; }
 
-    [Required(ErrorMessage = "Price is required.")]
+    [Required(ErrorMessage = "New Price is required.")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public decimal NewPrice { get; set; }
     
-    [Required(ErrorMessage = "Price is required.")]
+    [Required(ErrorMessage = "Old Price is required.")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public decimal OldPrice { get; set; }
 
     [Required(ErrorMessage = "Category Name is required.")]
-    public string? CategoryId { get; set; }
+    public string?  CategoryName { get; set; }
 
-    public IFormFileCollection  Photos { get; set; }
+    public  List<PhotoDTO> Photos { get; set; }
   }
 }
