@@ -1,8 +1,5 @@
-﻿using StackExchange.Redis;
-using Store.Core.Entities;
+﻿using Store.Core.Entities;
 using Store.Core.Interfaces;
-using Store.Core.Interfaces.RepositoriesInterFaces;
-using System.Text.Json;
 
 namespace Store.infrastructure.Repositories
 {
@@ -14,18 +11,20 @@ namespace Store.infrastructure.Repositories
     {
       _unitOfWork = unitOfWork;
     }
-    public async Task<Basket> GetBasketAsync(string userId)
+    public async Task<Basket> GetBasketAsync(string BasketId)
     {
-      return await _unitOfWork.BasketRepository.GetBasketAsync(userId) ?? new Basket(userId);
+      return await _unitOfWork.BasketRepository.GetBasketAsync(BasketId) ?? new Basket(BasketId);
     }
 
-    public async Task<Basket> AddItemToBasketAsync(string userId, int productId, int quantity)
+    public async Task<Basket> AddItemToBasketAsync(string BasketId, int productId, int quantity)
     {
       var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId, p => p.Category, p => p.Photos);
+
       if (product == null) throw new Exception("Product not found");
+
       if (product.Stock < quantity) throw new Exception("Not enough stock");
 
-      var basket = await GetBasketAsync(userId);
+      var basket = await GetBasketAsync(BasketId);
       var existingItem = basket.Items.FirstOrDefault(i => i.ProductId == productId);
 
       if (existingItem != null)
@@ -49,14 +48,17 @@ namespace Store.infrastructure.Repositories
       return basket;
     }
 
-    public async Task<Basket> UpdateItemQuantityAsync(string userId, int productId, int quantity)
+    public async Task<Basket> UpdateItemQuantityAsync(string BasketId, int productId, int quantity)
     {
       var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId);
+
       if (product == null) throw new Exception("Product not found");
+      
       if (product.Stock < quantity) throw new Exception("Not enough stock of Product");
 
-      var basket = await GetBasketAsync(userId);
+      var basket = await GetBasketAsync(BasketId);
       var item = basket.Items.FirstOrDefault(i => i.ProductId == productId);
+
       if (item == null) throw new Exception("Item not found");
 
       if (quantity <= 0)
@@ -68,20 +70,22 @@ namespace Store.infrastructure.Repositories
       return basket;
     }
 
-    public async Task<Basket> RemoveItemAsync(string userId, int productId)
+    public async Task<Basket> RemoveItemAsync(string BasketId, int productId)
     {
-      var basket = await GetBasketAsync(userId);
+      var basket = await GetBasketAsync(BasketId);
       var item = basket.Items.FirstOrDefault(i => i.ProductId == productId);
-      if (item == null) return basket;
+
+      if (item == null)
+        throw new Exception("Item not found");
 
       basket.Items.Remove(item);
       await _unitOfWork.BasketRepository.UpdateBasketAsync(basket);
       return basket;
     }
 
-    public async Task<bool> ClearBasketAsync(string userId)
+    public async Task<bool> ClearBasketAsync(string BasketId)
     {
-      return await _unitOfWork.BasketRepository.DeleteBasketAsync(userId);
+      return await _unitOfWork.BasketRepository.DeleteBasketAsync(BasketId);
     }
   }
 }

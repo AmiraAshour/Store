@@ -27,7 +27,7 @@ namespace Store.infrastructure.Repositories
 
     public async Task<Basket?> UpdateBasketAsync(Basket basket)
     {
-      var result =await _database.StringSetAsync(basket.Id, JsonSerializer.Serialize(basket), TimeSpan.FromDays(3));
+      var result =await _database.StringSetAsync(basket.Id, JsonSerializer.Serialize(basket), TimeSpan.FromDays(15));
       if (result)
       {
         return await GetBasketAsync(basket.Id)??basket;

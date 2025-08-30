@@ -148,29 +148,32 @@ namespace Store.Core.Services
 
     public string GenerateAccessToken(AppUser user)
     {
-      var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
-                new Claim("displayName", user.DispalyName ?? "")
-            };
+      DateTime expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]));
 
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+      Claim[] claims = new Claim[] {
+     new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), //Subject (user id)
+     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //JWT unique ID
+     //new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //Issued at (date and time of token generation)
+     new Claim(ClaimTypes.NameIdentifier, user.UserName!), //Unique name identifier of the user (Email)
+     new Claim(ClaimTypes.Name, user.DispalyName), //Name of the user
+     new Claim(ClaimTypes.Email, user.Email!) //Name of the user
+     };
 
-      var tokenDescriptor = new SecurityTokenDescriptor
-      {
-        Subject = new ClaimsIdentity(claims),
-        Expires = DateTime.UtcNow.AddMinutes(15),
-        Issuer = _config["Jwt:Issuer"],
-        Audience = _config["Jwt:Audience"],
-        SigningCredentials = creds
-      };
+      SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 
-      var tokenHandler = new JwtSecurityTokenHandler();
-      var token = tokenHandler.CreateToken(tokenDescriptor);
+      SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-      return tokenHandler.WriteToken(token);
+      JwtSecurityToken tokenGenerator = new JwtSecurityToken(
+       _config["Jwt:Issuer"],
+        _config["Jwt:Audience"],
+      claims,
+      expires: expiration,
+      signingCredentials: signingCredentials
+      );
+
+      JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+      return tokenHandler.WriteToken(tokenGenerator);
+
     }
 
     public async Task<string> GenerateRefreshTokenAsync(AppUser user)

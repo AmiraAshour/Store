@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Store.Core.Entities;
+using Store.Core.Entities.EntitySettings;
 using Store.Core.Interfaces;
 using System.ComponentModel;
 using System.Net;

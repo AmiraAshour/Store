@@ -1,18 +1,20 @@
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using Store.API.Middleware;
 using Store.Core.Entities;
+using Store.Core.Entities.EntitySettings;
 using Store.Core.Interfaces;
 using Store.Core.Services;
 using Store.infrastructure;
 using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
+using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,14 +25,18 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
   options.AddPolicy("CORSPolicy", builder =>
-  builder.AllowAnyMethod()
+  builder.WithOrigins("http://localhost:5500")
+      .AllowAnyMethod()
       .AllowAnyHeader()
       .AllowCredentials());
 });
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
+
+StripeConfiguration.ApiKey = builder.Configuration["StripeSettings:SecretKey"];
 
 builder.Services.InfrasturctureConfiguration(builder.Configuration);
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(i =>
 {
@@ -52,9 +58,10 @@ builder.Services.AddScoped<ICategoriesService, CategoriesService>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
 builder.Services.AddScoped<IPhotosService, PhotosService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
-builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddSingleton<IFileProvider>(
     new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
@@ -66,19 +73,20 @@ builder.Services.AddAuthentication(op =>
 {
   op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
   op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(op=>
+  op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie().AddJwtBearer(op =>
 {
   op.RequireHttpsMetadata = false;
   op.SaveToken = true;
-  op.TokenValidationParameters = new TokenValidationParameters
+  op.TokenValidationParameters = new TokenValidationParameters()
   {
-    ValidateIssuerSigningKey = true,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+    ValidateAudience = false,
+    //ValidAudience = builder.Configuration["Jwt:Audience"],
     ValidateIssuer = false,
     //ValidIssuer = builder.Configuration["Jwt:Issuer"],
-    ValidateAudience = false,
     ValidateLifetime = true,
-    ClockSkew = TimeSpan.Zero
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
   };
   op.Events = new JwtBearerEvents
   {
@@ -88,6 +96,7 @@ builder.Services.AddAuthentication(op =>
       {
         context.Token = context.Request.Cookies["token"];
       }
+
       return Task.CompletedTask;
     }
   };

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+
+<body>
+    <h1>Login</h1>
+
+    <form id="loginForm">
+        <label>Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <label>Password:</label>
+        <input type="password" id="password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        const baseUrl = "https://localhost:7025/api";
+
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const loginData = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const res = await fetch(`${baseUrl}/account/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData),
+                    credentials: "include" // مهم علشان الكوكي يترجع من السيرفر
+                });
+
+                const data = await res.json();
+                console.log(data);
+
+                if (res.ok) {
+                    // خزن الـ access token في localStorage
+                    localStorage.setItem("jwt", data.data.accessToken);
+                    alert("Login Successful ✅");
+                    window.location.href = "order.html"; // روح لصفحة الأوردر
+                } else {
+                    alert(data.message || "Login failed ❌");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error connecting to server");
+            }
+        });
+    </script>
+</body>
+
+</html>

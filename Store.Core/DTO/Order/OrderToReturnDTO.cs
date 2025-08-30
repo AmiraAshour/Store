@@ -1,9 +1,4 @@
 ﻿using Store.Core.Entities.Order;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Store.Core.DTO.Order
 {
@@ -16,7 +11,7 @@ namespace Store.Core.DTO.Order
     public DateTime OrderDate { get; set; }
     public ShippingAddress shippingAddress { get; set; }
     public IReadOnlyList<OrderItemDTO> orderItems { get; set; }
-    public string deliveryMethod { get; set; }
+    public DeliveryMethod deliveryMethod { get; set; }
     public string status { get; set; }
   }
 }

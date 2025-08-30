@@ -1,8 +1,7 @@
-﻿using Store.Core.Enitites;
-
+﻿
 namespace Store.Core.Entities.Order
 {
-  public class ShippingAddress:BaseEntity<int>
+  public class ShippingAddress
   {
     public ShippingAddress()
     {

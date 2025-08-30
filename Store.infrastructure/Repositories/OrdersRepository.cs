@@ -24,12 +24,27 @@ namespace Store.infrastructure.Repositories
   
     public async Task<IReadOnlyList<Orders>> GetAllOrdersForUserAsync(string BuyerEmail)
     {
-      return await _context.Orders.Where(o => o.BuyerEmail == BuyerEmail).ToListAsync();
+      return await _context.Orders.
+        Where(o => o.BuyerEmail == BuyerEmail).
+        Include(x=>x.deliveryMethod).
+        Include(x=>x.orderItems).
+        ToListAsync();
     }
-    public async Task<Orders?> GetOrderByIdAsync(int Id, string BuyerEmail)
+    public async Task<Orders?> GetOrderByIdAsync(int Id)
     {
-       return await _context.Orders.FirstOrDefaultAsync(o => o.Id == Id && o.BuyerEmail == BuyerEmail);
+       return await _context.Orders.
+        Where(o => o.Id == Id).
+        Include(x=>x.deliveryMethod).
+        Include(x=>x.orderItems).
+        FirstOrDefaultAsync();
        
+    }
+
+    public async Task<Orders?> UpdateOrderAsync(Orders oreder)
+    {
+      _context.Update(oreder);
+      await _context.SaveChangesAsync();
+      return oreder;
     }
   }
 }

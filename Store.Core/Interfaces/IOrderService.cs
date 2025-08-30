@@ -7,7 +7,11 @@ namespace Store.Core.Interfaces
   {
     Task<OrderToReturnDTO> CreateOrdersAsync(OrderDTO orderDTO, string BuyerEmail);
     Task<IReadOnlyList<OrderToReturnDTO>> GetAllOrdersForUserAsync(string BuyerEmail);
-    Task<OrderToReturnDTO?> GetOrderByIdAsync(int Id, string BuyerEmail);
+    Task<Orders?> GetOrderByIdAsync(int Id);
+    Task AttachPaymentIntentAsync(int Id, string PaymentIntentId);
     Task<IReadOnlyList<DeliveryMethod>?> GetDeliveryMethodAsync();
+
+    Task MarkOrderAsPaidAsync(int orderId, string paymentIntentId);
+    Task MarkOrderAsFailedAsync(int orderId, string paymentIntentId);
   }
 }

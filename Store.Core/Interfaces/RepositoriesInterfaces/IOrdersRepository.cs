@@ -6,6 +6,7 @@ namespace Store.Core.Interfaces.RepositoriesInterfaces
   {
     Task<Orders> AddOrederAsync(Orders oreder);
     Task<IReadOnlyList<Orders>> GetAllOrdersForUserAsync(string BuyerEmail);
-    Task<Orders?> GetOrderByIdAsync(int Id, string BuyerEmail);
+    Task<Orders?> GetOrderByIdAsync(int Id);
+    Task <Orders?> UpdateOrderAsync(Orders oreder);
   }
 }
