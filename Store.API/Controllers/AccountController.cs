@@ -120,7 +120,7 @@ public class AccountController : BaseController
     if (user == null)
       return ApiResponseHelper.Unauthrized("Invalid refresh token");
 
-    var newAccessToken = _authService.GenerateAccessToken(user);
+    var newAccessToken = await _authService.GenerateAccessTokenAsync(user);
     var newRefreshToken = await _authService.GenerateRefreshTokenAsync(user);
 
     Response.Cookies.Append("token", newAccessToken, new CookieOptions

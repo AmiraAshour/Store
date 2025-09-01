@@ -20,6 +20,7 @@ namespace Store.infrastructure.Repositories
     public IDeliveryMethodRepository DeliveryMethodRepository { get; }
     public IOrdersRepository OrdersRepository { get; }
     public IAddressRepository AddressRepository { get; }
+    public IReviewRepository ReviewRepository { get; }
 
     public UnitOfWork(AppDbContext context, IConnectionMultiplexer redis )
     {
@@ -31,6 +32,7 @@ namespace Store.infrastructure.Repositories
       DeliveryMethodRepository = new DeliveryMethodRepository(_context);
       OrdersRepository=new OrdersRepository(_context);
       AddressRepository = new AddressRepository(_context);
+      ReviewRepository = new ReviewRepository(_context);
     }
   }
 }

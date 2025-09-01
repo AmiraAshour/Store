@@ -3,12 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Store.Core.Entities;
 using Store.Core.Entities.Order;
 using Store.Core.Entities.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Store.infrastructure.Data
 {
@@ -23,7 +18,9 @@ namespace Store.infrastructure.Data
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Orders> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    public DbSet<DeliveryMethod> deliveryMethods { get; set; }
+    public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
+    public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

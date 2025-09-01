@@ -14,6 +14,11 @@ namespace Store.API.Controllers
     {
       _basketService = basketService;
     }
+    /// <summary>
+    /// Get the basket by id
+    /// </summary>
+    /// <param name="BasketId"> basket id</param>
+    /// <returns> basket items </returns>
 
     [HttpGet("{BasketId}")]
     public async Task<IActionResult> GetBasket(string BasketId)

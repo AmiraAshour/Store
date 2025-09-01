@@ -13,7 +13,6 @@ namespace Store.Core.Mapping
     public OrderMapping()
     {
       CreateMap<Orders, OrderToReturnDTO>()
-        .ForMember(d => d.deliveryMethod, o => o.MapFrom(s => s.deliveryMethod.Name))
         .ForMember(d => d.status, o => o.MapFrom(s => s.status))
         .ReverseMap();
       CreateMap<OrderItem, OrderItemDTO>().ReverseMap();

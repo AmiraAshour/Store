@@ -57,5 +57,6 @@ namespace Store.Core.Interfaces
     /// <returns>A task that represents the asynchronous operation. The task result contains the updated product with the latest
     /// details as stored in the system.</returns>
     Task<ProductDTO?> UpdateProductAsync(UpdateProductDTO? product);
+    Task UpdateProductRatingAsync(int productId);
   }
 }

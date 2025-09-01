@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
 using Store.Core.DTO.Category;
@@ -36,6 +37,7 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(category, "Category retrieved successfully.");
     }
 
+    [Authorize(Roles ="Admin")]
     [HttpPost]
     public async Task<IActionResult> PostCategory(CategoryDTO categoryDto)
     {
@@ -48,6 +50,7 @@ namespace Store.API.Controllers
 
     }
 
+    [Authorize(Roles ="Admin")]
     [HttpPut]
     public async Task<IActionResult> PutCategory(UpdateCategoryDTO categoryDto)
     {
@@ -66,6 +69,7 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(result, "Category has been updated successfully.");
     }
 
+    [Authorize(Roles ="Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> deleteCategory(int id)
     {

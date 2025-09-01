@@ -1,10 +1,5 @@
 ﻿using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.Core.Interfaces.RepositoriesInterFaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Store.Core.Interfaces
 {
@@ -17,5 +12,6 @@ namespace Store.Core.Interfaces
     public IDeliveryMethodRepository DeliveryMethodRepository  { get; }
     public IOrdersRepository OrdersRepository { get; }
     public IAddressRepository AddressRepository { get; }
+    public IReviewRepository ReviewRepository { get; }
   }
 }

@@ -20,5 +20,7 @@ namespace Store.Core.Entities.Product
 
     [ForeignKey(nameof (CategoryId))]
     public virtual Category Category { get; set; }
+    public double AverageRating { get; set; }   
+    public int ReviewCount { get; set; }
   }
 }

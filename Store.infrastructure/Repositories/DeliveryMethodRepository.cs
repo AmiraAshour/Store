@@ -21,12 +21,12 @@ namespace Store.infrastructure.Repositories
 
     public async Task<DeliveryMethod?> GetByIdAsync(int id)
     {
-      return await _context.deliveryMethods.FirstOrDefaultAsync(x=>x.Id==id);
+      return await _context.DeliveryMethods.FirstOrDefaultAsync(x=>x.Id==id);
     }
 
     public async Task<IReadOnlyList<DeliveryMethod>?> GetDeliveryMethodsAsync()
     {
-      return await _context.deliveryMethods.ToListAsync();
+      return await _context.DeliveryMethods.ToListAsync();
     }
   }
 }

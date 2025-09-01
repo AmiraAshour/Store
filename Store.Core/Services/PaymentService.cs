@@ -4,6 +4,7 @@ using Store.Core.Entities;
 using Store.Core.Entities.EntitySettings;
 using Store.Core.Interfaces;
 using Stripe;
+using System.Text;
 
 namespace Store.Core.Services
 {
@@ -66,16 +67,16 @@ namespace Store.Core.Services
 
     public async Task HandleWebhookAsync(HttpRequest request)
     {
-      // Read raw body
-      request.EnableBuffering();
-      using var reader = new StreamReader(request.Body, leaveOpen: true);
+      request.EnableBuffering(); // مهم
+
+      using var reader = new StreamReader(request.Body, Encoding.UTF8, leaveOpen: true);
       var json = await reader.ReadToEndAsync();
-      request.Body.Position = 0;
+      request.Body.Position = 0; // reset عشان Stripe يقدر يقراه تاني لو محتاج
 
       try
       {
         var signature = request.Headers["Stripe-Signature"];
-        var stripeEvent = EventUtility.ConstructEvent(json, signature, _stripe.WebhookSecret);
+        var stripeEvent = EventUtility.ConstructEvent(json, signature, _stripe.WebhookSecret,throwOnApiVersionMismatch:false);
 
         // Replace the usage of 'Events.PaymentIntentSucceeded' and 'Events.PaymentIntentPaymentFailed' in HandleWebhookAsync with the new constants
         if (stripeEvent.Type == PaymentIntentSucceeded)
@@ -93,6 +94,10 @@ namespace Store.Core.Services
           {
             await _orderService.MarkOrderAsFailedAsync(orderId, intent.Id);
           }
+        }
+        else
+        {
+          Console.WriteLine($"Unhandled event type: {stripeEvent.Type}");
         }
        
       }

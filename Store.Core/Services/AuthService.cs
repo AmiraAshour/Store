@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Store.Core.Services
 {
@@ -61,6 +62,8 @@ namespace Store.Core.Services
       if (!result.Succeeded)
         return new AuthResultDTO { Success = false, Errors = result.Errors.Select(e => e.Description) };
 
+      await _userManager.AddToRoleAsync(user, "User");
+
       var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
       await _emailSender.SendConfirmationEmailAsync(user.Email, "Confirm your email",
@@ -91,7 +94,7 @@ namespace Store.Core.Services
         return new AuthResultDTO { Success = false, Errors = new[] { "Invalid email or password" } };
 
 
-      var accessToken = GenerateAccessToken(user);
+      var accessToken =await GenerateAccessTokenAsync(user);
       string  refreshToken =await GenerateRefreshTokenAsync(user);
 
       return new AuthResultDTO { Success = true, AccessToken = accessToken, RefreshToken = refreshToken };
@@ -146,18 +149,23 @@ namespace Store.Core.Services
     }
 
 
-    public string GenerateAccessToken(AppUser user)
+    public async Task<string> GenerateAccessTokenAsync(AppUser user)
     {
       DateTime expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]));
 
-      Claim[] claims = new Claim[] {
+      var claims = new List<Claim> {
      new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), //Subject (user id)
      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //JWT unique ID
-     //new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), //Issued at (date and time of token generation)
-     new Claim(ClaimTypes.NameIdentifier, user.UserName!), //Unique name identifier of the user (Email)
+     new Claim(ClaimTypes.NameIdentifier, user.Id!), //Unique name identifier of the user (Email)
      new Claim(ClaimTypes.Name, user.DispalyName), //Name of the user
-     new Claim(ClaimTypes.Email, user.Email!) //Name of the user
+     new Claim(ClaimTypes.Email, user.Email!) ,//Name of the user
+     new Claim("UserId",user.Id.ToString()) //Custom claim to store user ID
      };
+      var roles =await _userManager.GetRolesAsync(user);
+      foreach (var role in roles)
+      {
+        claims.Add(new Claim(ClaimTypes.Role, role));
+      }
 
       SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 
@@ -216,6 +224,7 @@ namespace Store.Core.Services
       return await _unitOfWork.AddressRepository.GetAddressAsync(email);
     }
 
+    
   }
 
 }

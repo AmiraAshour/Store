@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
 using Store.Core.DTO.Product;
 using Store.Core.Interfaces;
@@ -17,7 +18,6 @@ namespace Store.API.Controllers
       _productService = productService;
     }
 
-    // GET: api/<ProductController>
     [HttpGet]
     public async Task<IActionResult> GetProducts([FromQuery]ProductParams param)
     {
@@ -29,7 +29,6 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(new Pagination<ProductDTO>(param.PageNumber,param.pageSize,param.pageSize,products.ToList()), "Categories retrieved successfully.");
     }
 
-    // GET api/<ProductController>/5
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProduct(int id)
     {
@@ -41,7 +40,7 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(product, "Product retrieved successfully.");
     }
 
-    // POST api/<ProductController>
+    [Authorize(Roles ="Admin")]
     [HttpPost]
     public async Task<IActionResult> PostProduct(AddProductDTO productDTO)
     {
@@ -53,7 +52,7 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Created(result, "Product created successfully.");
     }
 
-    // PUT api/<ProductController>/5
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<IActionResult> PutProduct(UpdateProductDTO productDTO)
     {
@@ -69,7 +68,7 @@ namespace Store.API.Controllers
        return ApiResponseHelper.Success(result, "Product updated successfully.");
     }
 
-    // DELETE api/<ProductController>/5
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {

@@ -53,29 +53,29 @@
     <h2>Create Order</h2>
     <form id="order-form">
         <label>Delivery Method ID</label>
-        <input type="number" id="deliveryMethodId" required>
+        <input type="number" id="deliveryMethodId">
 
         <label>Basket ID</label>
-        <input type="text" id="basketId" required>
+        <input type="text" id="basketId">
 
         <h3>Shipping Address</h3>
         <label>First Name</label>
-        <input type="text" id="firstName" required>
+        <input type="text" id="firstName">
 
         <label>Last Name</label>
-        <input type="text" id="lastName" required>
+        <input type="text" id="lastName">
 
         <label>City</label>
-        <input type="text" id="city" required>
+        <input type="text" id="city">
 
         <label>Zip Code</label>
-        <input type="text" id="zipCode" required>
+        <input type="text" id="zipCode">
 
         <label>Street</label>
-        <input type="text" id="street" required>
+        <input type="text" id="street">
 
         <label>State</label>
-        <input type="text" id="state" required>
+        <input type="text" id="state">
 
         <button type="submit">Submit Order</button>
     </form>
@@ -114,32 +114,41 @@
                 }
             };
 
+            try {
+                const response = await fetch("http://localhost:5031/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include", // مهم علشان الكوكي يترجع من السيرفر
+                    body: JSON.stringify({ // 👈 لازم JSON.stringify
+                        deliveryMethodId: 1,
+                        basketId: "user2",
+                        shipAddress: {
+                            firstName: "Amira",
+                            lastName: "Ashour",
+                            city: "Bani Mazer",
+                            zipCode: "521",
+                            street: "Shaihk Fadl",
+                            state: "Minya"
+                        }
+                    })
+                });
+
+                console.log(response);
+                const data = await response.json();
+                clientSecret = data.clientSecret; // السيرفر بيرجع clientSecret بتاع الدفع
+
+                alert("Order created successfully!");
+                localStorage.setItem("orderId", data.data.id); // خزن orderId علشان تستخدمه في صفحة الدفع
+                location.href = "payment.html"; // بعد ما الأوردر يتعمل، روح لصفحة الدفع
+
+            } catch (err) {
+                console.error(err);
+                alert("Error connecting to server");
+            }
             // هنا المفروض تستدعي API بتاعتك اللي تعمل الأوردر وترجع clientSecret من السيرفر
-            const response = await fetch("https://localhost:7025/api/orders", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: {
-                    "deliveryMethodId": 1,
-                    "basketId": "user2",
-                    "shipAddress": {
-                        "firstName": "Amira",
-                        "lastName": "Ashour",
-                        "city": "Bani Mazer",
-                        "zipCode": "521",
-                        "street": "Shaihk Fadl",
-                        "state": "Minya"
-                    }
-                }
-            });
 
-            const data = await response.json();
-            clientSecret = data.clientSecret; // السيرفر بيرجع clientSecret بتاع الدفع
-
-            alert("Order created successfully!");
-            orderForm.style.display = "none";
-            paymentForm.style.display = "block";
         });
 
         // 📌 Step 2: Payment

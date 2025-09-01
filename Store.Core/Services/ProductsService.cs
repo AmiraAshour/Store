@@ -150,7 +150,27 @@ namespace Store.Core.Services
       return await _unitOfWork.ProductRepository.DeleteAsync(id);
     }
 
-  
+    public async Task UpdateProductRatingAsync(int productId)
+    {
+      var reviews =await _unitOfWork.ReviewRepository.GetByProductIdAsync(productId);
+
+      var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId);
+
+      if (reviews.Any())
+      {
+        product.AverageRating = reviews.Average(r => r.Rating);
+        product.ReviewCount = reviews.Count();
+      }
+      else
+      {
+        product.AverageRating = 0;
+        product.ReviewCount = 0;
+      }
+
+      await _unitOfWork.ProductRepository.UpdateAsync(product);
+    }
+
+
 
   }
 }

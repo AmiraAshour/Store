@@ -11,7 +11,7 @@ namespace Store.Core.Interfaces
     Task<bool> ResendConfirmationEmailAsync(string email, string clientUrl);
     Task<bool> SendForgotPasswordEmailAsync(string email, string clientUrl);
     Task<AuthResultDTO?> ResetPasswordAsync(ResetPasswordDTO model);
-    string GenerateAccessToken(AppUser user);
+    Task<string> GenerateAccessTokenAsync(AppUser user);
     Task<string> GenerateRefreshTokenAsync(AppUser user);
     Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken, string email);
     Task<bool> UpdateAddressAsync(string email, AddressDTO address);

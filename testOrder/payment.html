@@ -3,156 +3,74 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Order & Pay</title>
+    <title>Payment</title>
+
     <script src="https://js.stripe.com/v3/"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        
-        form {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 4px;
-        }
-        
-        button {
-            margin-top: 15px;
-            padding: 10px 15px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        
-        button:hover {
-            background: #45a049;
-        }
-        
-        #payment-form {
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
-
-    <h2>Create Order</h2>
-    <form id="order-form">
-        <label>Delivery Method ID</label>
-        <input type="number" id="deliveryMethodId" required>
-
-        <label>Basket ID</label>
-        <input type="text" id="basketId" required>
-
-        <h3>Shipping Address</h3>
-        <label>First Name</label>
-        <input type="text" id="firstName" required>
-
-        <label>Last Name</label>
-        <input type="text" id="lastName" required>
-
-        <label>City</label>
-        <input type="text" id="city" required>
-
-        <label>Zip Code</label>
-        <input type="text" id="zipCode" required>
-
-        <label>Street</label>
-        <input type="text" id="street" required>
-
-        <label>State</label>
-        <input type="text" id="state" required>
-
-        <button type="submit">Submit Order</button>
-    </form>
-
-    <h2>Payment</h2>
-    <form id="payment-form">
-        <div id="card-element">
-            <!--Stripe.js injects the Card UI-->
-        </div>
-        <button id="submit">Pay</button>
-        <div id="payment-result"></div>
-    </form>
-
+    <h1>Payment</h1>
+    <button id="createIntent">Create Payment Intent</button>
+    <button id="payNow">Pay Now (Test)</button>
+    <div id="card-element"></div>
     <script>
-        const stripe = Stripe("pk_test_12345"); // استبدليها بمفتاح publishable key من Stripe
+        const baseUrl = "http://localhost:5031/api";
+        const orderId = localStorage.getItem("orderId");
 
-        const orderForm = document.getElementById("order-form");
-        const paymentForm = document.getElementById("payment-form");
+        if (!orderId) {
+            //alert("No order found, please create an order first.");
+            //  window.location.href = "order.html";
+            orderId = 1002;
+        }
 
-        let clientSecret = null; // هنا هنخزن secret اللي بيرجع من السيرفر
+        document.getElementById("createIntent").addEventListener("click", async function() {
+            const res = await fetch(`${baseUrl}/payments/create-intent/${orderId}`, {
+                method: "GET",
+                credentials: "include",
 
-        // 📌 Step 1: Create Order
-        orderForm.addEventListener("submit", async(e) => {
-            e.preventDefault();
-
-            const orderData = {
-                deliveryMethodId: document.getElementById("deliveryMethodId").value,
-                basketId: document.getElementById("basketId").value,
-                shipAddress: {
-                    firstName: document.getElementById("firstName").value,
-                    lastName: document.getElementById("lastName").value,
-                    city: document.getElementById("city").value,
-                    zipCode: document.getElementById("zipCode").value,
-                    street: document.getElementById("street").value,
-                    state: document.getElementById("state").value
-                }
-            };
-
-            // هنا المفروض تستدعي API بتاعتك اللي تعمل الأوردر وترجع clientSecret من السيرفر
-            const response = await fetch("http://localhost:5000/api/orders", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(orderData)
             });
 
-            const data = await response.json();
-            clientSecret = data.clientSecret; // السيرفر بيرجع clientSecret بتاع الدفع
+            const data = await res.json();
+            console.log(data);
+            alert("Payment Intent Created: " + data.data.clientSecret);
 
-            alert("Order created successfully!");
-            orderForm.style.display = "none";
-            paymentForm.style.display = "block";
+            localStorage.setItem("clientSecret", data.data.clientSecret);
+            localStorage.setItem("paymentIntentId", data.data.paymentIntentId);
         });
+        const stripe = Stripe("pk_test_51S0jTwL8IjdzdTf5iYyLiuzN1ubcfjZDgnn0tKzwxB14IkLgjzezHgTbdMtjrfufY0t4PgDwj7BBElUl9sZOvjxU00FcmLmKE2");
 
-        // 📌 Step 2: Payment
         const elements = stripe.elements();
         const cardElement = elements.create("card");
         cardElement.mount("#card-element");
 
-        paymentForm.addEventListener("submit", async(e) => {
-            e.preventDefault();
-
-            const {
-                paymentIntent,
-                error
+        document.getElementById("payNow").addEventListener("click", async function() {
+            let clientSecret = localStorage.getItem("clientSecret");
+            let {
+                error,
+                paymentIntent
             } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
-                    card: cardElement
+                    card: cardElement,
                 }
             });
-
             if (error) {
-                document.getElementById("payment-result").innerText = error.message;
-            } else if (paymentIntent.status === "succeeded") {
-                document.getElementById("payment-result").innerText = "Payment Successful!";
+                console.error(error);
+                alert("Payment failed: " + error.message);
+                return;
             }
+            const res = await fetch(`${baseUrl}/payments/pay-now-test`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(orderId)
+
+            });
+
+            const data = await res.json();
+            console.log(data);
+            alert("Payment Status: " + data.data.status);
         });
     </script>
 </body>
