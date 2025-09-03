@@ -1,9 +1,5 @@
-﻿using Store.Core.Entities.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Store.Core.Entities.ProductEntity;
 
 namespace Store.Core.Interfaces.RepositoriesInterFaces
 {

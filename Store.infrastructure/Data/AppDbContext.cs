@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Store.Core.Entities;
 using Store.Core.Entities.Order;
-using Store.Core.Entities.Product;
+using Store.Core.Entities.ProductEntity;
 using System.Reflection;
 
 namespace Store.infrastructure.Data
@@ -19,8 +19,8 @@ namespace Store.infrastructure.Data
     public DbSet<Orders> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
-
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<WishlistItem> WishlistItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

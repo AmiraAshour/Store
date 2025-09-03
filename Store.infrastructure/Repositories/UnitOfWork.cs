@@ -21,6 +21,7 @@ namespace Store.infrastructure.Repositories
     public IOrdersRepository OrdersRepository { get; }
     public IAddressRepository AddressRepository { get; }
     public IReviewRepository ReviewRepository { get; }
+    public IWishlistRepository wishlistRepository { get; }
 
     public UnitOfWork(AppDbContext context, IConnectionMultiplexer redis )
     {
@@ -33,6 +34,7 @@ namespace Store.infrastructure.Repositories
       OrdersRepository=new OrdersRepository(_context);
       AddressRepository = new AddressRepository(_context);
       ReviewRepository = new ReviewRepository(_context);
+      wishlistRepository = new WishlistRepository(_context);
     }
   }
 }

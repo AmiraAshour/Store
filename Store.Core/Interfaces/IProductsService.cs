@@ -1,12 +1,5 @@
 ﻿using Store.Core.DTO.Product;
-using Store.Core.Entities.Product;
 using Store.Core.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Store.Core.Interfaces
 {
   public interface IProductsService

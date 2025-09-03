@@ -13,5 +13,6 @@ namespace Store.Core.Interfaces
     public IOrdersRepository OrdersRepository { get; }
     public IAddressRepository AddressRepository { get; }
     public IReviewRepository ReviewRepository { get; }
+    public IWishlistRepository wishlistRepository { get; }
   }
 }

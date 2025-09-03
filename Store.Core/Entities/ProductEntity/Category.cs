@@ -1,6 +1,6 @@
 ﻿using Store.Core.Enitites;
 
-namespace Store.Core.Entities.Product
+namespace Store.Core.Entities.ProductEntity
 {
   public class Category:BaseEntity<int>
   {

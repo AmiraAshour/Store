@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -8,7 +7,6 @@ using StackExchange.Redis;
 using Store.Core.Entities;
 using Store.Core.Entities.EntitySettings;
 using Store.Core.Interfaces;
-using Store.Core.Interfaces.RepositoriesInterFaces;
 using Store.Core.Services;
 using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
@@ -65,6 +63,7 @@ namespace Store.Core
       services.AddScoped<IAuthService, AuthService>();
       services.AddScoped<IPaymentService, PaymentService>();
       services.AddScoped<IReviewService, ReviewService>();
+      services.AddScoped<IWishlistService, WishlistService>();
 
 
 

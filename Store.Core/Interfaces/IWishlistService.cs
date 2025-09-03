@@ -1,0 +1,14 @@
+﻿
+
+using Store.Core.DTO.Product;
+
+namespace Store.Core.Interfaces
+{
+  public interface IWishlistService
+  {
+    Task AddToWishlistAsync(string userId, int productId);
+    Task RemoveFromWishlistAsync(string userId, int productId);
+    Task<IReadOnlyList<ProductDTO>> GetWishlistAsync(string userId);
+  }
+
+}

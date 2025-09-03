@@ -1,7 +1,7 @@
 ﻿using Store.Core.Enitites;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Store.Core.Entities.Product
+namespace Store.Core.Entities.ProductEntity
 {
   public class Photo:BaseEntity<int>
   {

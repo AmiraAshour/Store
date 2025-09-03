@@ -1,12 +1,7 @@
 ﻿using Store.Core.Enitites;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Store.Core.Entities.Product
+namespace Store.Core.Entities.ProductEntity
 {
   public class Product:BaseEntity<int>
   {

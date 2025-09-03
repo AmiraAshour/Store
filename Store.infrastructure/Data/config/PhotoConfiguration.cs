@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Store.Core.Entities.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Store.Core.Entities.ProductEntity;
 namespace Store.infrastructure.Data.config
 {
   public class PhotoConfiguration : IEntityTypeConfiguration<Photo>

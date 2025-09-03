@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Store.Core.Entities.Product;
+using Store.Core.Entities.ProductEntity;
 using Store.Core.Interfaces.RepositoriesInterFaces;
 using Store.infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Store.infrastructure.Repositories
 {

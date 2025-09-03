@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.DTO.Category;
+using Store.Core.DTO.CategoryEntityDTO;
 using Store.Core.Interfaces;
 
 namespace Store.API.Controllers

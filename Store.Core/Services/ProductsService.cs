@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Store.Core.DTO.Product;
-using Store.Core.Entities.Product;
+using Store.Core.Entities.ProductEntity;
 using Store.Core.Interfaces;
 using Store.Core.Shared;
 namespace Store.Core.Services
