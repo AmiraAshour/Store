@@ -7,10 +7,12 @@ using Store.Core.Interfaces;
 public class AccountController : BaseController
 {
   private readonly IAuthService _authService;
+  private readonly IConfiguration _config;
 
-  public AccountController(IAuthService authService)
+  public AccountController(IAuthService authService,IConfiguration config)
   {
     _authService = authService;
+    _config = config;
   }
   [HttpPost("register")]
   public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO? model)
@@ -40,7 +42,7 @@ public class AccountController : BaseController
       HttpOnly = true,
       Secure = true,
       SameSite = SameSiteMode.Strict,
-      Expires = DateTime.UtcNow.AddMinutes(30)
+      Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]))
     });
 
     return ApiResponseHelper.Success(result, "Login successfuly");
@@ -59,37 +61,38 @@ public class AccountController : BaseController
   }
 
   [HttpGet("resend-confirmation-email")]
-  public async Task<IActionResult> ResendConfirmationEmailAsync(string email, string clientUrl)
+  public async Task<IActionResult> ResendConfirmationEmailAsync(string email)
   {
-    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(clientUrl))
+    if (string.IsNullOrEmpty(email))
       return ApiResponseHelper.BadRequest("Email and client URL are required");
-    var result = await _authService.ResendConfirmationEmailAsync(email, clientUrl);
+    var result = await _authService.ResendConfirmationEmailAsync(email);
+
     if (!result)
       return ApiResponseHelper.BadRequest("Resending confirmation email failed");
     return ApiResponseHelper.Success("", "Confirmation email resent successfully");
   }
 
 
-  [HttpPost("forgot-password")]
-  public async Task<IActionResult> ForgotPasswordAsync(string email, string clientUrl)
+  [HttpPost("forgot-password-email")]
+  public async Task<IActionResult> ForgotPasswordAsync(string email)
   {
-    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(clientUrl))
+    if (string.IsNullOrEmpty(email) )
       return ApiResponseHelper.BadRequest("Email and client URL are required");
 
-    var result = await _authService.SendForgotPasswordEmailAsync(email, clientUrl);
+    var result = await _authService.SendForgotPasswordEmailAsync(email);
 
     if (!result)
       return ApiResponseHelper.BadRequest("Sending forgot password email failed");
     return ApiResponseHelper.Success("", "Forgot password email sent successfully");
   }
 
-  [HttpGet("resend-forgot-password-email")]
-  public async Task<IActionResult> ResendForgotPasswordEmailAsync(string email, string clientUrl)
+  [HttpPost("resend-forgot-password-email")]
+  public async Task<IActionResult> ResendForgotPasswordEmailAsync(string email)
   {
-    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(clientUrl))
+    if (string.IsNullOrEmpty(email))
       return ApiResponseHelper.BadRequest("Email and client URL are required");
 
-    var result = await _authService.SendForgotPasswordEmailAsync(email, clientUrl);
+    var result = await _authService.SendForgotPasswordEmailAsync(email);
 
     if (!result)
       return ApiResponseHelper.BadRequest("Resending forgot password email failed");
@@ -113,10 +116,10 @@ public class AccountController : BaseController
   }
 
 
-  [HttpGet("refresh-token")]
-  public async Task<IActionResult> RefreshToken(string email, string refreshToken)
+  [HttpPost("refresh-token")]
+  public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
   {
-    var user = await _authService.GetUserByRefreshTokenAsync(refreshToken, email);
+    var user = _authService.GetUserByRefreshToken(refreshToken);
     if (user == null)
       return ApiResponseHelper.Unauthrized("Invalid refresh token");
 
@@ -145,40 +148,47 @@ public class AccountController : BaseController
     return ApiResponseHelper.Success("", "Logged out");
   }
 
+  //[HttpGet("profile")]
+  //public async Task<IActionResult> GetProfileAsync()
+  //{
+  //  var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+  //  if (string.IsNullOrEmpty(email))
+  //    return ApiResponseHelper.Unauthrized("User is not authenticated");
+
+  //  var profile = await _authService.GetProfileAsync(email);
+  //  if (profile is null)
+  //    return ApiResponseHelper.NotFound("Profile not found");
+
+  //  return ApiResponseHelper.Success(profile, "Profile retrieved successfully");
+  //}
+
+  //[HttpPut("update-profile")]
+  //public async Task<IActionResult> UpdateProfileAsync(UpdateProfileDTO model)
+  //{
+  //  if (model is null)
+  //    return ApiResponseHelper.BadRequest("Profile cannot be null");
+
+  //  var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+  //  if (string.IsNullOrEmpty(email))
+  //    return ApiResponseHelper.Unauthrized("User is not authenticated");
+
+  //  var updated = await _authService.UpdateProfileAsync(email, model);
+  //  return updated
+  //      ? ApiResponseHelper.Success("", "Profile updated successfully")
+  //      : ApiResponseHelper.BadRequest("Failed to update profile");
+  //}
+
+
   [HttpGet("IsUserAuth")]
   public IActionResult? IsUserAuth()
   {
     var user = User.Identity;
-    if (user is null)
-      return null;
-
-    return user.IsAuthenticated ? Ok() : BadRequest();
-  }
-
-  [HttpPut("update-address")]
-  public async Task<IActionResult> UpdateAddressAsync(AddressDTO? address)
-  {
-    if (address is null)
-      return ApiResponseHelper.BadRequest("Address cannot be null");
-    var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-    if (string.IsNullOrEmpty(email))
+    if (user is null || !user.IsAuthenticated)
       return ApiResponseHelper.Unauthrized("User is not authenticated");
-    var updatedAddress = await _authService.UpdateAddressAsync(email, address);
-    if (updatedAddress)
-      return ApiResponseHelper.BadRequest("Failed to update address");
-    return ApiResponseHelper.Success(updatedAddress, "Address updated successfully");
+
+    return ApiResponseHelper.Success("", "User is authenticated");
   }
 
-  [HttpGet("get-address")]
-  public async Task<IActionResult> GetAddressAsync()
-  {
-    var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-    if (string.IsNullOrEmpty(email))
-      return ApiResponseHelper.Unauthrized("User is not authenticated");
-    var address = await _authService.GetAddressAsync(email);
-    if (address is null)
-      return ApiResponseHelper.NotFound("Address not found");
-    return ApiResponseHelper.Success(address);
-  }
+  
 }
 

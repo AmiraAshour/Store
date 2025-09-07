@@ -26,7 +26,7 @@ namespace Store.API.Controllers
       {
         return ApiResponseHelper.NotFound("No Product found.");
       }
-      return ApiResponseHelper.Success(new Pagination<ProductDTO>(param.PageNumber,param.pageSize,param.pageSize,products.ToList()), "Categories retrieved successfully.");
+      return ApiResponseHelper.Success(new Pagination<ProductDTO>(param.PageNumber,param.pageSize,param.pageSize,products.ToList()), "Product retrieved successfully.");
     }
 
     [HttpGet("{id}")]

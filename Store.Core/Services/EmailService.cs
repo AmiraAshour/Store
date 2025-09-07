@@ -12,11 +12,9 @@ namespace Store.Core.Services
 
   public class EmailService : IEmailService
   {
-    private readonly IConfiguration _config;
     private readonly EmailSettings _emailSettings;
-    public EmailService(IConfiguration config, IOptions<EmailSettings> emailSettings)
+    public EmailService( IOptions<EmailSettings> emailSettings)
     {
-      _config = config;
       _emailSettings = emailSettings.Value;
     }
 

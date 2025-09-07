@@ -37,6 +37,7 @@ app.UseSwaggerUI(c =>
 });
 
 
+app.UseRateLimiter();
 
 app.MapControllers();
 

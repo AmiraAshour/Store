@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,6 +12,7 @@ using Store.Core.Services;
 using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace Store.Core
 {
@@ -18,7 +20,21 @@ namespace Store.Core
   {
     public static IServiceCollection CoreConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
+      // Rate Limiter Configuration
+      services.AddRateLimiter(options =>
+      {
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: "global",
+        _ => new FixedWindowRateLimiterOptions
+        {
+          Window = TimeSpan.FromSeconds(10),
+          PermitLimit = 5,
+          QueueLimit = 2,
+          QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+        }));
 
+      });
 
       // Add services to the container.
       services.AddControllers();
@@ -64,6 +80,7 @@ namespace Store.Core
       services.AddScoped<IPaymentService, PaymentService>();
       services.AddScoped<IReviewService, ReviewService>();
       services.AddScoped<IWishlistService, WishlistService>();
+      services.AddScoped<IAddressService, AddressService>();  
 
 
 

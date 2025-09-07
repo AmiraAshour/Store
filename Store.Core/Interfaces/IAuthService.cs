@@ -8,14 +8,12 @@ namespace Store.Core.Interfaces
     Task<AuthResultDTO> RegisterAsync(RegisterDTO model);
     Task<AuthResultDTO> LoginAsync(LoginDTO model);
     Task<bool> ConfirmEmailAsync(string userId, string token);
-    Task<bool> ResendConfirmationEmailAsync(string email, string clientUrl);
-    Task<bool> SendForgotPasswordEmailAsync(string email, string clientUrl);
+    Task<bool> ResendConfirmationEmailAsync(string email);
+    Task<bool> SendForgotPasswordEmailAsync(string email);
     Task<AuthResultDTO?> ResetPasswordAsync(ResetPasswordDTO model);
     Task<string> GenerateAccessTokenAsync(AppUser user);
     Task<string> GenerateRefreshTokenAsync(AppUser user);
-    Task<AppUser?> GetUserByRefreshTokenAsync(string refreshToken, string email);
-    Task<bool> UpdateAddressAsync(string email, AddressDTO address);
-    Task<Address?> GetAddressAsync(string email);
+    AppUser? GetUserByRefreshToken(string refreshToken);
 
   }
 }

@@ -1,11 +1,7 @@
-﻿using Store.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Core.Entities;
 using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Store.infrastructure.Repositories
 {
@@ -18,6 +14,15 @@ namespace Store.infrastructure.Repositories
       _context = context;
     }
 
+    public async Task<List<Address>?> GetAddressesAsync(string userId)
+    {
+      return await _context.Addresses.Where(x=>x.AppUserId==userId).ToListAsync();
+    }
+    public async Task<Address?> GetAddressById(int id)
+    {
+      return await _context.Addresses.FindAsync(id);
+    }
+
     public async Task<Address?> AddAddressAsync(Address address)
     {
       await _context.Addresses.AddAsync(address);
@@ -25,16 +30,20 @@ namespace Store.infrastructure.Repositories
       return address;
     }
 
-    public async Task<Address?> GetAddressAsync(string email)
-    {
-      return await _context.Addresses.FindAsync(email).AsTask();
-    }
 
     public async Task<Address?> UpdateAddressAsync(Address address)
     {
       _context.Addresses.Update(address);
       await _context.SaveChangesAsync();
       return address;
+    }
+    public async Task<bool> DeleteAddressAsync(int id) {  
+      var address = await _context.Addresses.FindAsync(id);
+      if (address is null)
+        return false;
+      _context.Addresses.Remove(address);
+      await _context.SaveChangesAsync();
+      return true;
     }
   }
 }
