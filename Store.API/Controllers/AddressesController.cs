@@ -21,7 +21,7 @@ namespace Store.API.Controllers
     {
       var userId=User.FindFirstValue(ClaimTypes.NameIdentifier);
       if(string.IsNullOrEmpty(userId))
-        return ApiResponseHelper.Unauthrized("User is not authenticated");
+        return ApiResponseHelper.Unauthorized("User is not authenticated");
 
       var addresses = await _addressService.GetAllAddressesAsync(userId);
       return ApiResponseHelper.Success(addresses, "Addresses retrieved successfully");
@@ -31,7 +31,7 @@ namespace Store.API.Controllers
     {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
       if (string.IsNullOrEmpty(userId))
-        return ApiResponseHelper.Unauthrized("User is not authenticated");
+        return ApiResponseHelper.Unauthorized("User is not authenticated");
 
       var result = await _addressService.AddAddressAsync( addressDto,userId);
       if (result == null)
@@ -43,7 +43,7 @@ namespace Store.API.Controllers
     {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
       if (string.IsNullOrEmpty(userId))
-        return ApiResponseHelper.Unauthrized("User is not authenticated");
+        return ApiResponseHelper.Unauthorized("User is not authenticated");
 
       var updatedAddress = await _addressService.UpdateAddressAsync(addressId, addressDto, userId);
 
@@ -57,7 +57,7 @@ namespace Store.API.Controllers
     {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
       if (string.IsNullOrEmpty(userId))
-        return ApiResponseHelper.Unauthrized("User is not authenticated");
+        return ApiResponseHelper.Unauthorized("User is not authenticated");
       var success = await _addressService.DeleteAddressAsync(addressId, userId);
      
       if (!success)

@@ -81,6 +81,7 @@ namespace Store.Core
       services.AddScoped<IReviewService, ReviewService>();
       services.AddScoped<IWishlistService, WishlistService>();
       services.AddScoped<IAddressService, AddressService>();  
+      services.AddScoped<IProfileService, ProfileSevice>();
 
 
 

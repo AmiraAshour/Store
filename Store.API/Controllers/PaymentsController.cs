@@ -23,7 +23,7 @@ namespace Store.API.Controllers
     public async Task<IActionResult> CreateIntent( int OrderId)
     { 
       var email = User.FindFirstValue(ClaimTypes.Email);
-      if (email is null) return ApiResponseHelper.Unauthrized("Login first");
+      if (email is null) return ApiResponseHelper.Unauthorized("Login first");
 
       var res = await _payments.CreateOrUpdateIntentAsync(OrderId ,email);
       return ApiResponseHelper.Success(res, "Client secret created");
@@ -34,7 +34,7 @@ namespace Store.API.Controllers
     public async Task<IActionResult> PayNowTest([FromBody] int OrderId)
     {
       var email = User.FindFirstValue(ClaimTypes.Email);
-      if (email is null) return ApiResponseHelper.Unauthrized("Login first");
+      if (email is null) return ApiResponseHelper.Unauthorized("Login first");
 
       // ensure PI exists
       var create = await _payments.CreateOrUpdateIntentAsync(OrderId, email);

@@ -35,7 +35,7 @@ public class AccountController : BaseController
     var result = await _authService.LoginAsync(model);
 
     if (!result.Success)
-      return ApiResponseHelper.Unauthrized(string.Join(", ", result.Errors));
+      return ApiResponseHelper.Unauthorized(string.Join(", ", result.Errors));
 
     Response.Cookies.Append("token", result.AccessToken!, new CookieOptions
     {
@@ -121,7 +121,7 @@ public class AccountController : BaseController
   {
     var user = _authService.GetUserByRefreshToken(refreshToken);
     if (user == null)
-      return ApiResponseHelper.Unauthrized("Invalid refresh token");
+      return ApiResponseHelper.Unauthorized("Invalid refresh token");
 
     var newAccessToken = await _authService.GenerateAccessTokenAsync(user);
     var newRefreshToken = await _authService.GenerateRefreshTokenAsync(user);
@@ -184,7 +184,7 @@ public class AccountController : BaseController
   {
     var user = User.Identity;
     if (user is null || !user.IsAuthenticated)
-      return ApiResponseHelper.Unauthrized("User is not authenticated");
+      return ApiResponseHelper.Unauthorized("User is not authenticated");
 
     return ApiResponseHelper.Success("", "User is authenticated");
   }

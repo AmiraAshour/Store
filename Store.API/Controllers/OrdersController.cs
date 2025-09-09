@@ -21,7 +21,7 @@ namespace Store.API.Controllers
     {
       var email = User.FindFirstValue(ClaimTypes.Email);
       if (email == null)
-        return ApiResponseHelper.Unauthrized("Please login and try again");
+        return ApiResponseHelper.Unauthorized("Please login and try again");
 
       var order = await _orderService.CreateOrdersAsync(orderDTO, email);
 
