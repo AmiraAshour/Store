@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
@@ -13,7 +17,6 @@ using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
 using System.Text;
 using System.Threading.RateLimiting;
-
 namespace Store.Core
 {
   public static class CoreRegisteration
@@ -42,10 +45,13 @@ namespace Store.Core
       services.AddCors(options =>
       {
         options.AddPolicy("CORSPolicy", builder =>
-        builder.WithOrigins("http://localhost:5500")
+        builder
+        //.AllowAnyOrigin()
+        .WithOrigins("http://localhost:7025", "https://localhost:7025", "http://localhost:5500")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowCredentials()
+            );
       });
 
       // configure strongly typed settings objects
@@ -90,12 +96,18 @@ namespace Store.Core
        );
 
       // Authentication configuretion
-      services.AddAuthentication(op =>
+      services.AddAuthentication(options =>
       {
-        op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        op.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-      }).AddCookie().AddJwtBearer(op =>
+        //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        //options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        //options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+
+      }).AddCookie()
+      //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+      .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
       {
         op.RequireHttpsMetadata = false;
         op.SaveToken = true;
@@ -121,7 +133,27 @@ namespace Store.Core
             return Task.CompletedTask;
           }
         };
-      });
+      })
+      .AddGoogle("Google", options =>
+      {
+        var google = configuration.GetSection("Authentication:Google");
+        options.ClientId = google["ClientId"]!;
+        options.ClientSecret = google["ClientSecret"]!;
+        options.CallbackPath = google["CallbackPath"];
+                                                      
+        //options.Scope.Add("profile");                                                   
+        //options.Scope.Add("email");                                                    
+        options.SaveTokens = true;
+
+
+        options.Events.OnCreatingTicket = context =>
+        {
+          Console.WriteLine("Ticket Received ✅");
+          Console.WriteLine("Access Token: " + context.Properties.GetTokenValue("access_token"));
+          Console.WriteLine("Id Token: " + context.Properties.GetTokenValue("id_token"));
+          return Task.CompletedTask;
+        };
+      }); 
 
       // Register the Swagger services
       services.AddEndpointsApiExplorer();

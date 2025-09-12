@@ -22,6 +22,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
 app.UseCors("CORSPolicy");
 
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
@@ -41,14 +42,7 @@ app.UseRateLimiter();
 
 app.MapControllers();
 
-// Seed Roles and Admin User
-using (var scope = app.Services.CreateScope())
-{
-  var services = scope.ServiceProvider;
-  var userManager = services.GetRequiredService<UserManager<AppUser>>();
-  var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-  await AppDbInitializer.SeedRolesAndAdminAsync(userManager, roleManager);
-}
+
 
 app.Run();
 

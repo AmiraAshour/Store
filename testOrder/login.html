@@ -9,6 +9,7 @@
 <body>
     <h1>Login</h1>
 
+    <!-- ====== الفورم العادي (email + password) ====== -->
     <form id="loginForm">
         <label>Email:</label>
         <input type="email" id="email" required><br><br>
@@ -19,9 +20,17 @@
         <button type="submit">Login</button>
     </form>
 
+    <hr>
+
+    <!-- ====== زرار Login with Google ====== -->
+    <button id="googleLoginBtn" style="margin-top:20px; background:#4285F4; color:white; padding:10px 20px; border:none; cursor:pointer; border-radius:5px;">
+        Login with Google
+    </button>
+
     <script>
         const baseUrl = "http://localhost:5031/api";
 
+        // Login عادي
         document.getElementById("loginForm").addEventListener("submit", async function(e) {
             e.preventDefault();
 
@@ -44,10 +53,9 @@
                 console.log(data);
 
                 if (res.ok) {
-                    // خزن الـ access token في localStorage
                     localStorage.setItem("jwt", data.data.accessToken);
                     alert("Login Successful ✅");
-                    window.location.href = "order.html"; // روح لصفحة الأوردر
+                    window.location.href = "order.html";
                 } else {
                     alert(data.message || "Login failed ❌");
                 }
@@ -55,6 +63,12 @@
                 console.error(err);
                 alert("Error connecting to server");
             }
+        });
+
+        // Login with Google
+        document.getElementById("googleLoginBtn").addEventListener("click", function() {
+            // افتح نافذة Google login
+            window.location.href = "https://localhost:7025/api/Account/externallogin/google";
         });
     </script>
 </body>

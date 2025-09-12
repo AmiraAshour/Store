@@ -13,6 +13,7 @@ namespace Store.Core.Interfaces
     Task<AuthResultDTO?> ResetPasswordAsync(ResetPasswordDTO model);
     Task<string> GenerateAccessTokenAsync(AppUser user);
     Task<string> GenerateRefreshTokenAsync(AppUser user);
+    Task<AuthResultDTO> HandleGoogleCallback();
     AppUser? GetUserByRefreshToken(string refreshToken);
 
   }

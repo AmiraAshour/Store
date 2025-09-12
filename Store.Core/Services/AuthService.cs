@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Store.API.Helper;
@@ -84,8 +83,10 @@ namespace Store.Core.Services
       {
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        await _emailSender.SendConfirmationEmailAsync(model.Email, "Confirm your email",
-            $"Please confirm your account by clicking this link", token, _config["FrontendUrls:ConfirmEmail"]!);
+        await _emailSender.SendConfirmationEmailAsync(model.Email,
+          "Confirm your email",
+            $"Please confirm your account by clicking this link",
+            token, _config["FrontendUrls:ConfirmEmail"]!);
 
         return new AuthResultDTO { Success = false, Errors = new[] { "Email not confirmed chick your email to confirm" } };
       }
@@ -94,8 +95,8 @@ namespace Store.Core.Services
         return new AuthResultDTO { Success = false, Errors = new[] { "Invalid email or password" } };
 
 
-      var accessToken =await GenerateAccessTokenAsync(user);
-      string  refreshToken =await GenerateRefreshTokenAsync(user);
+      var accessToken = await GenerateAccessTokenAsync(user);
+      string refreshToken = await GenerateRefreshTokenAsync(user);
 
       return new AuthResultDTO { Success = true, AccessToken = accessToken, RefreshToken = refreshToken };
     }
@@ -161,7 +162,7 @@ namespace Store.Core.Services
      new Claim(ClaimTypes.Email, user.Email!) ,//Name of the user
      new Claim("UserId",user.Id.ToString()) //Custom claim to store user ID
      };
-      var roles =await _userManager.GetRolesAsync(user);
+      var roles = await _userManager.GetRolesAsync(user);
       foreach (var role in roles)
       {
         claims.Add(new Claim(ClaimTypes.Role, role));
@@ -190,7 +191,7 @@ namespace Store.Core.Services
       using var rng = RandomNumberGenerator.Create();
       rng.GetBytes(randomNumber);
 
-      var token= Convert.ToBase64String(randomNumber);
+      var token = Convert.ToBase64String(randomNumber);
       user.RefreshToken = token;
       user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
 
@@ -202,14 +203,75 @@ namespace Store.Core.Services
     public AppUser? GetUserByRefreshToken(string refreshToken)
     {
 
-      var user =  _userManager.Users.FirstOrDefault (u => u.RefreshToken == refreshToken && u.RefreshTokenExpiryTime > DateTime.UtcNow);
+      var user = _userManager.Users.FirstOrDefault(u => u.RefreshToken == refreshToken && u.RefreshTokenExpiryTime > DateTime.UtcNow);
 
       return user;
     }
 
-   
 
-    
+    public async Task<AuthResultDTO> HandleGoogleCallback()
+    {
+      await AppDbInitializer.SeedRolesAndAdminAsync(_userManager, _roleManager);
+
+      var info = await _signInManager.GetExternalLoginInfoAsync();
+      if (info == null)
+        return new AuthResultDTO() { Success = false, Errors = new[] { "External login info not found" } };
+
+      var signInResult = await _signInManager.ExternalLoginSignInAsync(
+          info.LoginProvider, info.ProviderKey, false, true);
+
+      AppUser? user = null;
+
+      if (signInResult.Succeeded)
+      {
+        user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+      }
+      else
+      {
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        if (email == null)
+          return new AuthResultDTO()
+          {
+            Success = false,
+            Errors = new[] { "Email not found from provider" }
+          };
+
+        user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+          user = new AppUser
+          {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = true,
+            DispalyName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? email
+          };
+          var result = await _userManager.CreateAsync(user);
+          if (!result.Succeeded) return new AuthResultDTO()
+          {
+            Success = false,
+            Errors = new[] { "Failed to create user" }
+          };
+        }
+
+        await _userManager.AddToRoleAsync(user, "User");
+
+        var addLogin = await _userManager.AddLoginAsync(user,
+            new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName));
+
+        if (!addLogin.Succeeded) return new AuthResultDTO()
+        {
+          Success = false,
+          Errors = new[] { "Failed to link external login" }
+        };
+      }
+
+      var accessToken = await GenerateAccessTokenAsync(user);
+      var refreshToken = await GenerateRefreshTokenAsync(user);
+
+      return new AuthResultDTO() { Success = true, AccessToken = accessToken, RefreshToken = refreshToken };
+    }
+
   }
 
 }

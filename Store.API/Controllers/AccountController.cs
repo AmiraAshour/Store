@@ -1,18 +1,25 @@
 ﻿
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Controllers;
 using Store.API.Helper;
 using Store.Core.DTO.Account;
+using Store.Core.Entities;
 using Store.Core.Interfaces;
+using System.Security.Claims;
 public class AccountController : BaseController
 {
   private readonly IAuthService _authService;
   private readonly IConfiguration _config;
+  private readonly SignInManager<AppUser> _signInManager;
 
-  public AccountController(IAuthService authService,IConfiguration config)
+  public AccountController(IAuthService authService, IConfiguration config, SignInManager<AppUser> signInManager)
   {
     _authService = authService;
     _config = config;
+    _signInManager = signInManager;
   }
   [HttpPost("register")]
   public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO? model)
@@ -45,7 +52,7 @@ public class AccountController : BaseController
       Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]))
     });
 
-    return ApiResponseHelper.Success(result, "Login successfuly");
+    return ApiResponseHelper.Success(new { result.AccessToken, result.RefreshToken }, "Login successfuly");
   }
 
   [HttpGet("confirm-email")]
@@ -142,44 +149,43 @@ public class AccountController : BaseController
   }
 
   [HttpGet("logout")]
+  [Authorize]
   public IActionResult Logout()
   {
     Response.Cookies.Delete("token");
     return ApiResponseHelper.Success("", "Logged out");
   }
 
-  //[HttpGet("profile")]
-  //public async Task<IActionResult> GetProfileAsync()
-  //{
-  //  var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-  //  if (string.IsNullOrEmpty(email))
-  //    return ApiResponseHelper.Unauthrized("User is not authenticated");
 
-  //  var profile = await _authService.GetProfileAsync(email);
-  //  if (profile is null)
-  //    return ApiResponseHelper.NotFound("Profile not found");
+  [HttpGet("externallogin/google")]
+  public IActionResult ExternalLoginGoogle()
+  {
+    var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account");
+    var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+    return Challenge(properties, "Google");
+  }
 
-  //  return ApiResponseHelper.Success(profile, "Profile retrieved successfully");
-  //}
+  [HttpGet("externallogin/google-callback")]
+  public async Task<IActionResult> ExternalLoginCallback()
+  {
 
-  //[HttpPut("update-profile")]
-  //public async Task<IActionResult> UpdateProfileAsync(UpdateProfileDTO model)
-  //{
-  //  if (model is null)
-  //    return ApiResponseHelper.BadRequest("Profile cannot be null");
+    var result = await _authService.HandleGoogleCallback();
+    if (result.Errors != null) return BadRequest(new { result.Errors });
 
-  //  var email = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-  //  if (string.IsNullOrEmpty(email))
-  //    return ApiResponseHelper.Unauthrized("User is not authenticated");
+    Response.Cookies.Append("token", result.AccessToken!, new CookieOptions
+    {
+      HttpOnly = true,
+      Secure = true,
+      SameSite = SameSiteMode.Strict,
+      Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]))
+    });
 
-  //  var updated = await _authService.UpdateProfileAsync(email, model);
-  //  return updated
-  //      ? ApiResponseHelper.Success("", "Profile updated successfully")
-  //      : ApiResponseHelper.BadRequest("Failed to update profile");
-  //}
+    return ApiResponseHelper.Success(new { result.AccessToken, result.RefreshToken},"Login successfuly");
+  }
 
 
-  [HttpGet("IsUserAuth")]
+
+[HttpGet("IsUserAuth")]
   public IActionResult? IsUserAuth()
   {
     var user = User.Identity;
