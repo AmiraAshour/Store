@@ -2,6 +2,7 @@
 using Store.Core.Entities.Order;
 using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.infrastructure.Data;
+using System.Linq.Expressions;
 
 namespace Store.infrastructure.Repositories
 {
@@ -14,6 +15,10 @@ namespace Store.infrastructure.Repositories
       _context = context;
     }
 
+    public async Task<IEnumerable<Orders>> GetAllOrdersAsync(Expression<Func<Orders, bool>> filter)
+    {
+      return await _context.Orders.Where(filter).ToListAsync();
+    }
     public async Task<Orders> AddOrederAsync(Orders oreder)
     {
       await _context.Orders.AddAsync(oreder);

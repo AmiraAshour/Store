@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
@@ -86,8 +86,9 @@ namespace Store.Core
       services.AddScoped<IPaymentService, PaymentService>();
       services.AddScoped<IReviewService, ReviewService>();
       services.AddScoped<IWishlistService, WishlistService>();
-      services.AddScoped<IAddressService, AddressService>();  
+      services.AddScoped<IAddressService, AddressService>();
       services.AddScoped<IProfileService, ProfileSevice>();
+      services.AddScoped<IReportService, ReportService>();  
 
 
 
@@ -98,15 +99,13 @@ namespace Store.Core
       // Authentication configuretion
       services.AddAuthentication(options =>
       {
-        //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        //options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        //options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
-      }).AddCookie()
-      //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+      })
+      .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
       .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
       {
         op.RequireHttpsMetadata = false;
@@ -140,20 +139,14 @@ namespace Store.Core
         options.ClientId = google["ClientId"]!;
         options.ClientSecret = google["ClientSecret"]!;
         options.CallbackPath = google["CallbackPath"];
-                                                      
-        //options.Scope.Add("profile");                                                   
-        //options.Scope.Add("email");                                                    
+
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
         options.SaveTokens = true;
 
 
-        options.Events.OnCreatingTicket = context =>
-        {
-          Console.WriteLine("Ticket Received ✅");
-          Console.WriteLine("Access Token: " + context.Properties.GetTokenValue("access_token"));
-          Console.WriteLine("Id Token: " + context.Properties.GetTokenValue("id_token"));
-          return Task.CompletedTask;
-        };
-      }); 
+      });
+
 
       // Register the Swagger services
       services.AddEndpointsApiExplorer();
@@ -171,6 +164,14 @@ namespace Store.Core
 
       // register the AutoMapper services
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+      // register Fluent Validation
+      services.AddFluentValidationAutoValidation();
+      services.AddValidatorsFromAssemblyContaining<ProductDTOValidator>();
+
+
+      services.AddHangfire(config => config.UseSqlServerStorage(configuration.GetConnectionString("Store")));
+      services.AddHangfireServer();
 
       return services;
     }

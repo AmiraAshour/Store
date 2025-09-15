@@ -56,12 +56,12 @@ public class AccountController : BaseController
   }
 
   [HttpGet("confirm-email")]
-  public async Task<IActionResult> ConfirmEmailAsync(string email, string token)
+  public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
   {
-    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+    if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
       return ApiResponseHelper.BadRequest("Email and token are required");
 
-    var result = await _authService.ConfirmEmailAsync(email, token);
+    var result = await _authService.ConfirmEmailAsync(userId, token);
     if (!result)
       return ApiResponseHelper.BadRequest("Email confirmation failed");
     return ApiResponseHelper.Success("", "Email confirmed successfully");

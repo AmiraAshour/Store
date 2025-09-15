@@ -69,5 +69,21 @@ namespace Store.Core.Services
       return profile;
 
     }
+
+    public  IEnumerable<AppUser>? GetNewUsersForToday()
+    {
+      var today = DateTime.UtcNow.Date;
+      return  _userManager.Users.Where(u => u.CreatedAt.Date == today).ToList();
+    }
+
+    public IEnumerable<AppUser>? GetNewUsersForThisMonth()
+    {
+      var now = DateTime.UtcNow;
+      var firstDay = new DateTime(now.Year, now.Month, 1);
+      var lastDay = firstDay.AddMonths(1).AddDays(-1);
+
+      return _userManager.Users.Where(u =>  u.CreatedAt.Date >= firstDay && u.CreatedAt.Date <= lastDay).ToList();
+  
+    }
   }
 }

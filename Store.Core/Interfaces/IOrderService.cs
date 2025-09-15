@@ -1,4 +1,5 @@
-﻿using Store.Core.DTO.Order;
+﻿
+using Store.Core.DTO.Order;
 using Store.Core.Entities.Order;
 
 namespace Store.Core.Interfaces
@@ -13,5 +14,8 @@ namespace Store.Core.Interfaces
 
     Task MarkOrderAsPaidAsync(int orderId, string paymentIntentId);
     Task MarkOrderAsFailedAsync(int orderId, string paymentIntentId);
+
+    Task<IEnumerable<Orders>?> GetOrdersForTodayAsync();
+    Task<IEnumerable<Orders>?> GetOrdersForThisMonthAsync();
   }
 }

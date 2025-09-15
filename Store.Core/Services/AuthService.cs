@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Store.API.Helper;
@@ -18,18 +19,15 @@ namespace Store.Core.Services
     private readonly SignInManager<AppUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _config;
-    private readonly IEmailService _emailSender;
 
     public AuthService(UserManager<AppUser> userManager,
                        SignInManager<AppUser> signInManager,
                        IConfiguration config,
-                       IEmailService emailSender,
                        RoleManager<IdentityRole> roleManager)
     {
       _userManager = userManager;
       _signInManager = signInManager;
       _config = config;
-      _emailSender = emailSender;
       _roleManager = roleManager;
     }
 
@@ -64,8 +62,7 @@ namespace Store.Core.Services
 
       var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-      await _emailSender.SendConfirmationEmailAsync(user.Email, "Confirm your email",
-          $"Please confirm your account by clicking this link", token, _config["FrontendUrls:ConfirmEmail"]!);
+     BackgroundJob.Enqueue<IEmailService>( _emailSender => _emailSender.SendConfirmationEmailAsync(user.Email, user.Id,token, _config["FrontendUrls:ConfirmEmail"]!));
 
       return new AuthResultDTO { Success = true };
     }
@@ -83,10 +80,7 @@ namespace Store.Core.Services
       {
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        await _emailSender.SendConfirmationEmailAsync(model.Email,
-          "Confirm your email",
-            $"Please confirm your account by clicking this link",
-            token, _config["FrontendUrls:ConfirmEmail"]!);
+        BackgroundJob.Enqueue<IEmailService>(_emailSender => _emailSender.SendConfirmationEmailAsync(user.Email, user.Id, token, _config["FrontendUrls:ConfirmEmail"]!));
 
         return new AuthResultDTO { Success = false, Errors = new[] { "Email not confirmed chick your email to confirm" } };
       }
@@ -102,9 +96,9 @@ namespace Store.Core.Services
     }
 
 
-    public async Task<bool> ConfirmEmailAsync(string email, string token)
+    public async Task<bool> ConfirmEmailAsync(string userId, string token)
     {
-      var user = await _userManager.FindByEmailAsync(email);
+      var user = await _userManager.FindByIdAsync(userId);
       if (user == null) return false;
 
       var result = await _userManager.ConfirmEmailAsync(user, token);
@@ -113,24 +107,31 @@ namespace Store.Core.Services
     public async Task<bool> ResendConfirmationEmailAsync(string email)
     {
       var user = await _userManager.FindByEmailAsync(email);
-      if (user == null || user.EmailConfirmed)
-        return false;
+      if (user == null )
+        throw new Exception("The user with the provided email does not exist.");
+
+      if (user.EmailConfirmed)
+        throw new Exception("Email is allready confiermed");
+
       var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-      await _emailSender.SendConfirmationEmailAsync(email, "Confirm your email",
-          $"Please confirm your account by clicking this link", token, _config["FrontendUrls:ConfirmEmail"]!);
+      BackgroundJob.Enqueue<IEmailService>(_emailSender => _emailSender.SendConfirmationEmailAsync(user.Email, user.Id, token, _config["FrontendUrls:ConfirmEmail"]!));
+
       return true;
     }
 
     public async Task<bool> SendForgotPasswordEmailAsync(string email)
     {
       var user = await _userManager.FindByEmailAsync(email);
-      if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
-        return false;
+      if (user == null )
+        throw new Exception("The user with the provided email does not exist.");
+
+      if(!(await _userManager.IsEmailConfirmedAsync(user))){
+        await ResendConfirmationEmailAsync(email);
+        throw new Exception("Email is not confirmed please confirm email and try again");
+      }
 
       var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-      await _emailSender.SendConfirmationEmailAsync(email, "Reset Password",
-          $"Click here to reset your password", token, _config["FrontendUrls:ForgotPassword"]!);
+      BackgroundJob.Enqueue<IEmailService>(_emailSender => _emailSender.SendResetPasswordEmailAsync(user.Email, user.Id, token, _config["FrontendUrls:ConfirmEmail"]!));
 
       return true;
     }
@@ -138,7 +139,7 @@ namespace Store.Core.Services
 
     public async Task<AuthResultDTO?> ResetPasswordAsync(ResetPasswordDTO model)
     {
-      var user = await _userManager.FindByEmailAsync(model.Email);
+      var user = await _userManager.FindByIdAsync(model.UserId);
       if (user == null)
         return null;
 

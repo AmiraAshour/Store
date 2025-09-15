@@ -11,5 +11,7 @@ namespace Store.Core.Interfaces
     Task<ProfileDTO?> UpdateProfileAsync(string userId, UpdateProfileDTO dto);
     Task<bool> ChangePasswordAsync(string userId, ChangePasswordDTO dto);
     Task<bool> DeleteAccountAsync(string userId);
+    IEnumerable<AppUser>? GetNewUsersForToday();
+    IEnumerable<AppUser>? GetNewUsersForThisMonth();
   }
 }

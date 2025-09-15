@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Hangfire;
+using StackExchange.Redis;
 using Store.Core.DTO.Order;
 using Store.Core.Entities.Order;
 using Store.Core.Interfaces;
+using Store.Core.Interfaces.RepositoriesInterfaces;
 
 namespace Store.Core.Services
 {
@@ -94,6 +97,9 @@ namespace Store.Core.Services
 
       await _unitOfWork.OrdersRepository.UpdateOrderAsync(order);
 
+      BackgroundJob.Enqueue<IEmailService>(emailService => emailService.SendOrderInvoiceEmailAsync(order.BuyerEmail, order));
+
+
     }
 
     public async Task MarkOrderAsFailedAsync(int orderId, string paymentIntentId)
@@ -110,6 +116,23 @@ namespace Store.Core.Services
     public async Task<IReadOnlyList<DeliveryMethod>?> GetDeliveryMethodAsync()
     {
       return await _unitOfWork.DeliveryMethodRepository.GetDeliveryMethodsAsync();
+    }
+
+    public async Task<IEnumerable<Orders>?> GetOrdersForTodayAsync()
+    {
+      var today = DateTime.UtcNow.Date;
+      return await _unitOfWork.OrdersRepository.GetAllOrdersAsync(o => o.OrderDate.Date == today);
+     
+    }
+
+    public async Task<IEnumerable<Orders>?> GetOrdersForThisMonthAsync()
+    {
+      var now = DateTime.UtcNow;
+      var firstDay = new DateTime(now.Year, now.Month, 1);
+      var lastDay = firstDay.AddMonths(1).AddDays(-1);
+
+      return await _unitOfWork.OrdersRepository.GetAllOrdersAsync(o => o.OrderDate.Date >= firstDay && o.OrderDate.Date <= lastDay);
+     
     }
 
   }
