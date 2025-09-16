@@ -17,6 +17,7 @@ using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
 using System.Text;
 using System.Threading.RateLimiting;
+
 namespace Store.Core
 {
   public static class CoreRegisteration
@@ -155,6 +156,7 @@ namespace Store.Core
 
       services.AddSwaggerGen(c =>
        {
+         c.EnableAnnotations();
          c.SwaggerDoc("v1", new OpenApiInfo
          {
            Title = "Store API",
