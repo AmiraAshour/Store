@@ -12,8 +12,8 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250901130225_AddReview")]
-    partial class AddReview
+    [Migration("20250916190659_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,8 +264,7 @@ namespace Store.infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId")
-                        .IsUnique();
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Addresses");
                 });
@@ -387,7 +386,7 @@ namespace Store.infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Category", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -423,7 +422,7 @@ namespace Store.infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -458,7 +457,7 @@ namespace Store.infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -556,9 +555,30 @@ namespace Store.infrastructure.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("Store.Core.Entities.WishlistItem", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProductId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WishlistItems");
+                });
+
             modelBuilder.Entity("Store.Core.Entities.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DispalyName")
                         .IsRequired()
@@ -628,10 +648,11 @@ namespace Store.infrastructure.Migrations
             modelBuilder.Entity("Store.Core.Entities.Address", b =>
                 {
                     b.HasOne("Store.Core.Entities.AppUser", "AppUser")
-                        .WithOne("Address")
-                        .HasForeignKey("Store.Core.Entities.Address", "AppUserId")
+                        .WithMany("Address")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_AppUser_Address");
 
                     b.Navigation("AppUser");
                 });
@@ -695,9 +716,9 @@ namespace Store.infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Photo", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Photo", b =>
                 {
-                    b.HasOne("Store.Core.Entities.Product.Product", "Product")
+                    b.HasOne("Store.Core.Entities.ProductEntity.Product", "Product")
                         .WithMany("Photos")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -706,9 +727,9 @@ namespace Store.infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Product", b =>
                 {
-                    b.HasOne("Store.Core.Entities.Product.Category", "Category")
+                    b.HasOne("Store.Core.Entities.ProductEntity.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -717,25 +738,43 @@ namespace Store.infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Store.Core.Entities.WishlistItem", b =>
+                {
+                    b.HasOne("Store.Core.Entities.ProductEntity.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Store.Core.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Store.Core.Entities.Order.Orders", b =>
                 {
                     b.Navigation("orderItems");
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Category", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Store.Core.Entities.Product.Product", b =>
+            modelBuilder.Entity("Store.Core.Entities.ProductEntity.Product", b =>
                 {
                     b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Store.Core.Entities.AppUser", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

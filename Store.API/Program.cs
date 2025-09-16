@@ -30,7 +30,7 @@ app.UseHangfireDashboard("/dashboard");
 RecurringJob.AddOrUpdate<ReportService>(
     "daily-report-job",
     service => service.SendDailyReportAsync(),
-    "* 6 * * *"   
+    "* 6 * * *"
 );
 
 RecurringJob.AddOrUpdate<ReportService>(

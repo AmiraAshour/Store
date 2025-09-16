@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FuzzySharp;
+using Microsoft.EntityFrameworkCore;
 using Store.Core.DTO.Product;
 using Store.Core.Entities.ProductEntity;
 using Store.Core.Interfaces;
@@ -17,26 +19,35 @@ namespace Store.Core.Services
       _mapper = mapper;
       _photosService = photosService;
     }
-    public async Task<IEnumerable<ProductDTO>?> GetAllProductsAsync(ProductParams param )
+    public async Task<IEnumerable<ProductDTO>?> GetAllProductsAsync(ProductParams param)
     {
 
       var products = _unitOfWork.ProductRepository
-        .GetAll(x=>x.Category,x=> x.Photos);
+        .GetAll(x => x.Category, x => x.Photos);
       if (products == null)
         return null;
 
-      //filter by word
+      //filter by word    
       if (!string.IsNullOrEmpty(param.Search))
       {
-        var searchTerm = param.Search.Split(" ");
-        products = products.Where(p => searchTerm.Any(word=>
-        p.Name.ToLower().Contains(word.ToLower())||
-        p.Description.ToLower().Contains(word.ToLower())
-        ));
+
+        //var searchTerms = param.Search.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        //products = products.Where(p =>
+        //    searchTerms.Any(term =>
+        //        Fuzz.PartialRatio(p.Name.ToLower(), term) > 70 ||
+        //        Fuzz.PartialRatio(p.Description.ToLower(), term) > 70
+        //    )
+        //);
+
+        products = products.Where(p =>
+           EF.Functions.FreeText(p.Name!, param.Search) ||
+           EF.Functions.FreeText(p.Description!, param.Search)
+        );
       }
 
+
       //filter by categoryid
-      if (param.CategoryId.HasValue )
+      if (param.CategoryId.HasValue)
       {
         products = products.Where(p => p.CategoryId == param.CategoryId);
       }
@@ -65,22 +76,22 @@ namespace Store.Core.Services
       {
         throw new ArgumentException("Product ID must be greater than zero.", nameof(id));
       }
-      var product=await _unitOfWork.ProductRepository.GetByIdAsync(id,x=>x.Photos,x=>x.Category);
-      var productDTO=_mapper.Map<ProductDTO>(product);
+      var product = await _unitOfWork.ProductRepository.GetByIdAsync(id, x => x.Photos, x => x.Category);
+      var productDTO = _mapper.Map<ProductDTO>(product);
       return productDTO;
     }
 
     public async Task<ProductDTO?> AddProductAsync(AddProductDTO? productDTO)
     {
       if (productDTO == null)
-          return null;
+        return null;
       var entity = _mapper.Map<Product>(productDTO);
 
-      var ImagePath=await _photosService.AddPhotoAsync(productDTO.Photos,productDTO.Name!);
+      var ImagePath = await _photosService.AddPhotoAsync(productDTO.Photos, productDTO.Name!);
 
-      var product= await _unitOfWork.ProductRepository.AddAsync(entity);
+      var product = await _unitOfWork.ProductRepository.AddAsync(entity);
       if (product == null)
-          return null;
+        return null;
 
       var photos = ImagePath.Select(x => new Photo
       {
@@ -93,7 +104,7 @@ namespace Store.Core.Services
       {
         throw new Exception("Failed to add photos to the product.");
       }
-      var resulte= _mapper.Map<ProductDTO>(product);
+      var resulte = _mapper.Map<ProductDTO>(product);
       return resulte;
     }
 
@@ -104,17 +115,17 @@ namespace Store.Core.Services
       var existingProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.Id, x => x.Photos, x => x.Category);
       if (existingProduct == null)
         return null;
-      var enity=_mapper.Map<Product>(product);
+      var enity = _mapper.Map<Product>(product);
 
       var findPhotos = await _unitOfWork.PhotoRepository.GetPhotosByProductIdAsync(product.Id);
       if (findPhotos != null)
       {
         foreach (var item in findPhotos)
-      { 
-        if(item.ImageName == null)
-          continue;
-        _photosService.DeletePhoto( item.ImageName);
-      }
+        {
+          if (item.ImageName == null)
+            continue;
+          _photosService.DeletePhoto(item.ImageName);
+        }
         await _unitOfWork.PhotoRepository.DeleteRangeAsync(findPhotos);
       }
       var ImagePath = await _photosService.AddPhotoAsync(product.Photos, product.Name!);
@@ -131,7 +142,7 @@ namespace Store.Core.Services
         throw new Exception("Failed to add photos to the product.");
       }
 
-      var productResult= await _unitOfWork.ProductRepository.UpdateAsync(enity);
+      var productResult = await _unitOfWork.ProductRepository.UpdateAsync(enity);
       return _mapper.Map<ProductDTO>(productResult);
     }
 
@@ -144,7 +155,7 @@ namespace Store.Core.Services
         {
           if (item.ImageName == null)
             continue;
-          _photosService.DeletePhoto( item.ImageName);
+          _photosService.DeletePhoto(item.ImageName);
         }
       }
       return await _unitOfWork.ProductRepository.DeleteAsync(id);
@@ -152,7 +163,7 @@ namespace Store.Core.Services
 
     public async Task UpdateProductRatingAsync(int productId)
     {
-      var reviews =await _unitOfWork.ReviewRepository.GetByProductIdAsync(productId);
+      var reviews = await _unitOfWork.ReviewRepository.GetByProductIdAsync(productId);
 
       var product = await _unitOfWork.ProductRepository.GetByIdAsync(productId);
 
