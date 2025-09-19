@@ -24,6 +24,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseStaticFiles();
 
 app.UseHangfireDashboard("/dashboard");
 

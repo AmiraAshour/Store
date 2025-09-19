@@ -13,5 +13,6 @@ namespace Store.Core.Interfaces
     Task<bool> DeleteAccountAsync(string userId);
     IEnumerable<AppUser>? GetNewUsersForToday();
     IEnumerable<AppUser>? GetNewUsersForThisMonth();
+    Task<IEnumerable<string?>?> GetEmailsAdmin();
   }
 }

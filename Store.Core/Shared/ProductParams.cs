@@ -15,7 +15,7 @@ namespace Store.Core.Shared
     public int TotatlCount { get; set; }
 
     public string? Search { get; set; }
-    public int MaxPageSize { get; set; } = 6;
+    public int MaxPageSize { get; set; } = 30;
     private int _pageSize = 3;
 
     public int pageSize

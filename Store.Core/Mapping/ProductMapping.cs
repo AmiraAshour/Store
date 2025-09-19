@@ -12,7 +12,7 @@ namespace Store.Core.Mapping
         op => op.MapFrom(src => src.Category.Name))
         .ReverseMap();
       
-      CreateMap<Photo, PhotoDTO>().ReverseMap();
+      CreateMap<Photo, PhotoDTO>().ForMember(x=>x.ImageUrl,x=>x.MapFrom(p=>p.ImageName)).ReverseMap();
 
       CreateMap<AddProductDTO,Product>()
         .ForMember(d => d.Photos, op => op.Ignore()).ReverseMap();

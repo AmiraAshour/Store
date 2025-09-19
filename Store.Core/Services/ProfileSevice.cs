@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Store.Core.DTO.Account;
 using Store.Core.Entities;
 using Store.Core.Interfaces;
+using System.Threading.Tasks;
 
 namespace Store.Core.Services
 {
@@ -84,6 +85,11 @@ namespace Store.Core.Services
 
       return _userManager.Users.Where(u =>  u.CreatedAt.Date >= firstDay && u.CreatedAt.Date <= lastDay).ToList();
   
+    }
+    public async Task<IEnumerable<string?>?> GetEmailsAdmin()
+    {
+      var admins= await _userManager.GetUsersInRoleAsync("Admin");
+     return admins?.Select(a => a.Email);
     }
   }
 }
