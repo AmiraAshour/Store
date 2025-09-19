@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Store.Core.Entities;
 
 namespace Store.API.Helper
@@ -7,7 +8,7 @@ namespace Store.API.Helper
   {
     public static async Task SeedRolesAndAdminAsync(
         UserManager<AppUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,IConfiguration configuration)
     {
 
       if (!await roleManager.RoleExistsAsync("Admin"))
@@ -16,18 +17,18 @@ namespace Store.API.Helper
       if (!await roleManager.RoleExistsAsync("User"))
         await roleManager.CreateAsync(new IdentityRole("User"));
 
-      var adminUser = await userManager.FindByEmailAsync("admin@gmail.com");
+      var adminUser = await userManager.FindByEmailAsync(configuration["AdminUser:Email"]!);
       if (adminUser == null)
       {
         var newAdmin = new AppUser()
         {
           DispalyName = "Admin User",
           UserName = "admin",
-          Email = "admin@gmail.com",
+          Email = configuration["AdminUser:Email"]!,
           EmailConfirmed = true
         };
 
-        var result = await userManager.CreateAsync(newAdmin, "Admin@123"); // باسورد افتراضي
+        var result = await userManager.CreateAsync(newAdmin, configuration["AdminUser:Password"]!); 
         if (result.Succeeded)
         {
           await userManager.AddToRoleAsync(newAdmin, "Admin");

@@ -1,22 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Store.Core.Interfaces;
 
 namespace Store.Core.Services
 {
   public class PhotosService : IPhotosService
   {
-    private readonly IFileProvider fileProvider;
-    public PhotosService(IFileProvider fileProvider)
+    private readonly IFileProvider _fileProvider;
+    private readonly ILogger<PhotosService> _logger;
+
+    public PhotosService(IFileProvider fileProvider, ILogger<PhotosService> logger)
     {
-      this.fileProvider = fileProvider;
+      _fileProvider = fileProvider;
+      _logger = logger;
     }
+
     public async Task<List<string>> AddPhotoAsync(IFormFileCollection files, string src)
     {
-      var saveImageSrc=new List<string>();
-      var directory=Path.Combine("wwwroot", "images",src);
-      if(!Directory.Exists(directory))
+      var saveImageSrc = new List<string>();
+      var directory = Path.Combine("wwwroot", "images", src);
+
+      if (!Directory.Exists(directory))
+      {
         Directory.CreateDirectory(directory);
+        _logger.LogInformation("Created directory: {Directory}", directory);
+      }
 
       foreach (var file in files)
       {
@@ -24,27 +33,60 @@ namespace Store.Core.Services
         {
           var fileName = Path.GetFileName(file.FileName);
           var filePath = Path.Combine(directory, fileName);
-          using (var stream = new FileStream(filePath, FileMode.Create))
+
+          try
           {
-            await file.CopyToAsync(stream);
-            saveImageSrc.Add(Path.Combine("images", src, fileName));
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+              await file.CopyToAsync(stream);
+            }
+
+            var relativePath = Path.Combine("images", src, fileName);
+            saveImageSrc.Add(relativePath);
+
+            _logger.LogInformation("Saved file: {FilePath}", relativePath);
+          }
+          catch (Exception ex)
+          {
+            _logger.LogError(ex, "Error saving file: {FileName}", fileName);
           }
         }
+        else
+        {
+          _logger.LogWarning("Skipped empty file: {FileName}", file.FileName);
+        }
       }
-      return saveImageSrc;
 
+      return saveImageSrc;
     }
 
     public void DeletePhoto(string src)
     {
-      var info=fileProvider.GetFileInfo(src);
+      var info = _fileProvider.GetFileInfo(src);
+
       if (info.Exists)
       {
         var filePath = info.PhysicalPath;
-        if (File.Exists(filePath))
+        try
         {
-          File.Delete(filePath);
+          if (File.Exists(filePath))
+          {
+            File.Delete(filePath);
+            _logger.LogInformation("Deleted file: {FilePath}", src);
+          }
+          else
+          {
+            _logger.LogWarning("File not found for deletion: {FilePath}", src);
+          }
         }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Error deleting file: {FilePath}", src);
+        }
+      }
+      else
+      {
+        _logger.LogWarning("File info does not exist for: {FilePath}", src);
       }
     }
   }
