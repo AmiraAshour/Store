@@ -9,7 +9,6 @@ namespace Store.Core.Interfaces.ServiceInterfaces
     Task<IReadOnlyList<OrderToReturnDTO>> GetAllOrdersForUserAsync(string BuyerEmail);
     Task<Orders?> GetOrderByIdAsync(int Id);
     Task AttachPaymentIntentAsync(int Id, string PaymentIntentId);
-    Task<IReadOnlyList<DeliveryMethod>?> GetDeliveryMethodAsync();
 
     Task MarkOrderAsPaidAsync(int orderId, string paymentIntentId);
     Task MarkOrderAsFailedAsync(int orderId, string paymentIntentId);

@@ -1,12 +1,9 @@
-﻿using Store.Core.Entities.BasketEntity;
+﻿
 
-namespace Store.Core.Entities.Order
+namespace Store.Core.DTO.Order
 {
-  public class DeliveryMethod:BaseEntity<int>
+  public class DeliveryMethodDTO
   {
-   
-  
-
     public string Name { get; set; }
     public decimal Price { get; set; }
     public string DeliveryTime { get; set; }

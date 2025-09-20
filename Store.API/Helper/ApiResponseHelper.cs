@@ -18,6 +18,12 @@ namespace Store.API.Helper
         new BadRequestObjectResult(new ApiResponse<string>((int)HttpStatusCode.BadRequest, message));
     public static IActionResult Unauthorized(string? message = null) =>
         new UnauthorizedObjectResult(new ApiResponse<string>((int)HttpStatusCode.Unauthorized, message));
+
+    public static IActionResult InternalServerError(string? message = null) =>
+        new ObjectResult(new ApiResponse<string>((int)HttpStatusCode.InternalServerError, message)) { StatusCode = 500 };
+
+    public static IActionResult NoContent(string message) =>
+        new ObjectResult(new ApiResponse<string>((int)HttpStatusCode.NoContent,message));
   }
 
 }

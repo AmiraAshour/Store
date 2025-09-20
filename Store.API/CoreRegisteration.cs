@@ -91,6 +91,7 @@ namespace Store.Core
       services.AddScoped<IAddressService, AddressService>();
       services.AddScoped<IProfileService, ProfileSevice>();
       services.AddScoped<IReportService, ReportService>();  
+      services.AddScoped<IDeliveryMethodServce, DeliveryMethodServices>();
 
 
 

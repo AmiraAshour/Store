@@ -147,11 +147,6 @@ namespace Store.Core.Services
       await _unitOfWork.OrdersRepository.UpdateOrderAsync(order);
     }
 
-    public async Task<IReadOnlyList<DeliveryMethod>?> GetDeliveryMethodAsync()
-    {
-      _logger.LogInformation("Fetching delivery methods");
-      return await _unitOfWork.DeliveryMethodRepository.GetDeliveryMethodsAsync();
-    }
 
     public async Task<IEnumerable<Orders>?> GetOrdersForTodayAsync()
     {

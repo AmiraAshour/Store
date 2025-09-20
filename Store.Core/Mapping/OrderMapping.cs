@@ -19,6 +19,7 @@ namespace Store.Core.Mapping
       CreateMap<ShippingAddress,ShipAddressDTO>().ReverseMap();
       CreateMap<Address,AddressDTO>().ReverseMap();
       CreateMap<Address, RetriveAddressDTO>().ReverseMap();
+      CreateMap<DeliveryMethod, DeliveryMethodDTO>().ReverseMap();
 
     }
   }

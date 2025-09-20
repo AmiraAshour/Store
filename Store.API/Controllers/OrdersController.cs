@@ -82,19 +82,6 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(order);
     }
 
-    /// <summary>
-    /// Get available delivery methods
-    /// </summary>
-    [HttpGet("deliveryMethods")]
-    [SwaggerOperation(
-      Summary = "Get delivery methods",
-      Description = "Returns all available delivery methods for placing orders."
-    )]
-    [ProducesResponseType(typeof(IEnumerable<DeliveryMethod>), 200)]
-    public async Task<IActionResult> GetDeliveryMethods()
-    {
-      var deliveryMethods = await _orderService.GetDeliveryMethodAsync();
-      return ApiResponseHelper.Success(deliveryMethods);
-    }
+   
   }
 }
