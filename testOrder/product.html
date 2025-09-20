@@ -70,7 +70,7 @@
     <script>
         async function loadProducts() {
             try {
-                const response = await fetch("https://localhost:7025/api/Product?pageSize=30");
+                const response = await fetch("https://my-store.runasp.net/api/Product?pageSize=30");
                 const result = await response.json();
 
                 const products = result.data.data;
@@ -81,7 +81,7 @@
                     card.className = "card";
 
                     const img = document.createElement("img");
-                    img.src = `https://localhost:7025/${product.photos[0]?.imageUrl}`;
+                    img.src = `https://my-store.runasp.net/${product.photos[0]?.imageUrl}`;
                     img.alt = product.name;
 
                     const title = document.createElement("h3");

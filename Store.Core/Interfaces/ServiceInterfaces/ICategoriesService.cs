@@ -1,6 +1,6 @@
 ﻿using Store.Core.DTO.CategoryEntityDTO;
 using Store.Core.Entities.ProductEntity;
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface ICategoriesService
   {

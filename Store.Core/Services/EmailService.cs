@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Store.Core.Entities.EntitySettings;
 using Store.Core.Entities.Order;
-using Store.Core.Interfaces;
 using System.Net;
 using System.Net.Mail;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

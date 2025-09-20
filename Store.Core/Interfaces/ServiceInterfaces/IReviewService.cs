@@ -1,9 +1,7 @@
-﻿
+﻿using Store.Core.DTO;
+using Store.Core.Entities.comman;
 
-using Store.Core.DTO;
-using Store.Core.Entities;
-
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IReviewService
   {

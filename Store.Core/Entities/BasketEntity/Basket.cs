@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.Entities
+namespace Store.Core.Entities.BasketEntity
 {
   public class Basket
   {

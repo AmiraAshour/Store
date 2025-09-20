@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Store.Core.Entities;
+using Store.Core.Entities.UserEntity;
 using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.infrastructure.Data;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
 using Store.Core.DTO.Order;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Store.API.Controllers

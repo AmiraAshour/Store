@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Store.Core.Interfaces;
 using Store.Core.Interfaces.RepositoriesInterFaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Store.infrastructure.Data;
 using Store.infrastructure.Repositories;
 

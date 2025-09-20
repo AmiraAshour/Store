@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Store.Core.Entities;
+using Store.Core.Entities.UserEntity;
 
 namespace Store.API.Helper
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Store.Core.DTO;
-using Store.Core.Entities;
-using Store.Core.Interfaces;
+using Store.Core.Entities.comman;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

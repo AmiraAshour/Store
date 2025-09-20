@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Store.Core.Entities;
+using Store.Core.Entities.comman;
 using System.Reflection.Emit;
 
 namespace Store.infrastructure.Data.config

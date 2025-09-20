@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
 using Store.Core.DTO.Product;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Store.Core.Shared;
 using Swashbuckle.AspNetCore.Annotations;
 

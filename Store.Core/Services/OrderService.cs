@@ -3,7 +3,7 @@ using Hangfire;
 using Microsoft.Extensions.Logging;
 using Store.Core.DTO.Order;
 using Store.Core.Entities.Order;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

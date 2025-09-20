@@ -1,6 +1,4 @@
-﻿
-
-using Store.Core.Entities;
+﻿using Store.Core.Entities.comman;
 
 namespace Store.Core.Interfaces.RepositoriesInterfaces
 {

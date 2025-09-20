@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Store.Core.Entities;
+using Store.Core.Entities.comman;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IPaymentService
   {

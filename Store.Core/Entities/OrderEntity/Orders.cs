@@ -1,6 +1,4 @@
-﻿
-
-using Store.Core.Enitites;
+﻿using Store.Core.Entities.BasketEntity;
 
 namespace Store.Core.Entities.Order
 {

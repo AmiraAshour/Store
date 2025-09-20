@@ -1,6 +1,4 @@
-﻿
-
-namespace Store.Core.Entities
+﻿namespace Store.Core.Entities.comman
 {
   public class PaymentIntentCreateResponse
   {

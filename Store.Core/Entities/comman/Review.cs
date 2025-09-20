@@ -1,8 +1,7 @@
-﻿
-using Store.Core.Enitites;
+﻿using Store.Core.Entities.BasketEntity;
 using System.ComponentModel.DataAnnotations;
 
-namespace Store.Core.Entities
+namespace Store.Core.Entities.comman
 {
   public class Review:BaseEntity<int>
   {

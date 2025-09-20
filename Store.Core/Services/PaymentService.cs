@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Store.Core.Entities;
+using Store.Core.Entities.comman;
 using Store.Core.Entities.EntitySettings;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Stripe;
 using System.Text;
 

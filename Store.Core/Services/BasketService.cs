@@ -1,6 +1,7 @@
 ﻿using Store.Core.Entities;
-using Store.Core.Interfaces;
 using Microsoft.Extensions.Logging;
+using Store.Core.Entities.BasketEntity;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.infrastructure.Repositories
 {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Store.Core.DTO.Product;
 using Store.Core.Entities.ProductEntity;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Store.Core.Shared;
 
 namespace Store.Core.Services

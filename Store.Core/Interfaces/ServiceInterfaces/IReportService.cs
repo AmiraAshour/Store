@@ -1,6 +1,4 @@
-﻿
-
-namespace Store.Core.Interfaces
+﻿namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IReportService
   {

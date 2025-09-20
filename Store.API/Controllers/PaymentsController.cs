@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Stripe;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -39,35 +39,6 @@ namespace Store.API.Controllers
 
       var res = await _payments.CreateOrUpdateIntentAsync(OrderId, email);
       return ApiResponseHelper.Success(res, "Client secret created");
-    }
-
-    /// <summary>
-    /// Test-only endpoint to confirm a payment immediately.
-    /// </summary>
-    /// <remarks>
-    /// ⚠️ For development/testing only. Uses Stripe's test card (`pm_card_visa`).  
-    /// DO NOT use in production environments.
-    /// </remarks>
-    /// <param name="OrderId">The ID of the order to simulate payment for</param>
-    /// <response code="200">Returns the PaymentIntent confirmation result</response>
-    [HttpPost("pay-now-test")]
-    [SwaggerOperation(Summary = "Simulate Payment Confirmation (Test Only)",
-                      Description = "Confirms a PaymentIntent immediately using Stripe’s test card. Not for production use.")]
-    public async Task<IActionResult> PayNowTest([FromBody] int OrderId)
-    {
-      var email = User.FindFirstValue(ClaimTypes.Email);
-      if (email is null) return ApiResponseHelper.Unauthorized("Login first");
-
-      // ensure PI exists
-      var create = await _payments.CreateOrUpdateIntentAsync(OrderId, email);
-
-      var service = new PaymentIntentService();
-      var confirm = await service.ConfirmAsync(create.PaymentIntentId, new PaymentIntentConfirmOptions
-      {
-        PaymentMethod = "pm_card_visa" // Stripe test card
-      });
-
-      return ApiResponseHelper.Success(new { confirm.Id, confirm.Status });
     }
 
     /// <summary>

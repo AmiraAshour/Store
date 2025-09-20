@@ -1,4 +1,4 @@
-﻿using Store.Core.Enitites;
+﻿using Store.Core.Entities.BasketEntity;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.Core.Entities.ProductEntity

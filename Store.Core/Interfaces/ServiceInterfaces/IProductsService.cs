@@ -1,6 +1,6 @@
 ﻿using Store.Core.DTO.Product;
 using Store.Core.Shared;
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IProductsService
   {

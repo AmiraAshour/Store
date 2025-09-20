@@ -1,9 +1,8 @@
-﻿
-
-using Store.Core.Entities.ProductEntity;
+﻿using Store.Core.Entities.ProductEntity;
+using Store.Core.Entities.UserEntity;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Store.Core.Entities
+namespace Store.Core.Entities.comman
 {
   public class WishlistItem
   {

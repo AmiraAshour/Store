@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Store.Core.Entities;
+using Store.Core.Entities.comman;
 using Store.Core.Entities.Order;
 using Store.Core.Entities.ProductEntity;
+using Store.Core.Entities.UserEntity;
 using System.Reflection;
 
 namespace Store.infrastructure.Data

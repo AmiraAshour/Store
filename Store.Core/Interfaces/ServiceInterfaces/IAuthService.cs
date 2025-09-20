@@ -1,7 +1,7 @@
 ﻿using Store.Core.DTO.Account;
-using Store.Core.Entities;
+using Store.Core.Entities.UserEntity;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IAuthService
   {

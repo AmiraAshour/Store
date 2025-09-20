@@ -3,8 +3,8 @@
 using AutoMapper;
 using Store.Core.DTO.Account;
 using Store.Core.DTO.Order;
-using Store.Core.Entities;
 using Store.Core.Entities.Order;
+using Store.Core.Entities.UserEntity;
 
 namespace Store.Core.Mapping
 {

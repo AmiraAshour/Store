@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
 using Store.Core.DTO;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 

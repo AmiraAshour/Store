@@ -4,8 +4,8 @@ using Swashbuckle.AspNetCore.Annotations;
 using Store.API.Helper;
 using Store.Core.DTO.Order;
 using Store.Core.Entities.Order;
-using Store.Core.Interfaces;
 using System.Security.Claims;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.API.Controllers
 {

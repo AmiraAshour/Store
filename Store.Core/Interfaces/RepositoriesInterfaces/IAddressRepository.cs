@@ -1,4 +1,4 @@
-﻿using Store.Core.Entities;
+﻿using Store.Core.Entities.UserEntity;
 
 namespace Store.Core.Interfaces.RepositoriesInterfaces
 {

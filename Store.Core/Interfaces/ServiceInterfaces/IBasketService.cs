@@ -1,5 +1,5 @@
-﻿using Store.Core.Entities;
-namespace Store.Core.Interfaces
+﻿using Store.Core.Entities.BasketEntity;
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IBasketService
   {

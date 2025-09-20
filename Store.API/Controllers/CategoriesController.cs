@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Store.API.Helper;
 using Store.Core.DTO.CategoryEntityDTO;
 using Store.Core.Entities.ProductEntity;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.API.Controllers
 {

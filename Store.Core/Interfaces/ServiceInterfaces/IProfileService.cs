@@ -1,9 +1,7 @@
-﻿
+﻿using Store.Core.DTO.Account;
+using Store.Core.Entities.UserEntity;
 
-using Store.Core.DTO.Account;
-using Store.Core.Entities;
-
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IProfileService
   {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Store.Core.DTO.Account;
-using Store.Core.Entities;
-using Store.Core.Interfaces;
 using Microsoft.Extensions.Logging;
+using Store.Core.Entities.UserEntity;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

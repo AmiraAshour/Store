@@ -1,8 +1,7 @@
-﻿
-using Store.Core.DTO.Order;
+﻿using Store.Core.DTO.Order;
 using Store.Core.Entities.Order;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IOrderService
   {

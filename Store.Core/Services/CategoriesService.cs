@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Store.Core.DTO.CategoryEntityDTO;
 using Store.Core.Entities.ProductEntity;
-using Store.Core.Interfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

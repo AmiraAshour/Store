@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Store.Core.DTO.Product;
-using Store.Core.Entities;
+using Store.Core.Entities.comman;
 using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.infrastructure.Data;
 

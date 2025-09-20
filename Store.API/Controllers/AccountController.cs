@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Store.API.Controllers;
 using Store.API.Helper;
 using Store.Core.DTO.Account;
-using Store.Core.Entities;
-using Store.Core.Interfaces;
+using Store.Core.Entities.UserEntity;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Swashbuckle.AspNetCore.Annotations;
 public class AccountController : BaseController
 {
@@ -34,7 +34,7 @@ public class AccountController : BaseController
     if (!result.Success)
       return ApiResponseHelper.BadRequest(string.Join(", ", result.Errors));
 
-    return ApiResponseHelper.Created(result, "The account created");
+    return ApiResponseHelper.Created(result.Errors, "The account created");
   }
 
   /// <summary>User login</summary>
@@ -55,7 +55,7 @@ public class AccountController : BaseController
     Response.Cookies.Append("token", result.AccessToken!, new CookieOptions
     {
       HttpOnly = true,
-      Secure = true,
+      Secure = false,
       SameSite = SameSiteMode.Strict,
       Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]))
     });
@@ -219,7 +219,7 @@ public class AccountController : BaseController
     Response.Cookies.Append("token", result.AccessToken!, new CookieOptions
     {
       HttpOnly = true,
-      Secure = true,
+      Secure = false,
       SameSite = SameSiteMode.Strict,
       Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:EXPIRATION_MINUTES"]))
     });

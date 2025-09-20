@@ -1,4 +1,4 @@
-﻿using Store.Core.Entities;
+﻿using Store.Core.Entities.BasketEntity;
 
 namespace Store.Core.Interfaces
 {

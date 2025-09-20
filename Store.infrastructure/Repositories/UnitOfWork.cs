@@ -4,6 +4,7 @@ using StackExchange.Redis;
 using Store.Core.Interfaces;
 using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.Core.Interfaces.RepositoriesInterFaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 using Store.infrastructure.Data;
 
 namespace Store.infrastructure.Repositories

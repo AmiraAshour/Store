@@ -1,7 +1,7 @@
 ﻿using Store.Core.Interfaces.RepositoriesInterfaces;
 using Store.Core.Interfaces.RepositoriesInterFaces;
 
-namespace Store.Core.Interfaces
+namespace Store.Core.Interfaces.ServiceInterfaces
 {
   public interface IUnitOfWork
   {

@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Store.Core.DTO.Product;
 using Store.Core.Entities;
-using Store.Core.Interfaces;
+using Store.Core.Entities.comman;
 using Store.Core.Interfaces.RepositoriesInterfaces;
+using Store.Core.Interfaces.ServiceInterfaces;
 
 namespace Store.Core.Services
 {

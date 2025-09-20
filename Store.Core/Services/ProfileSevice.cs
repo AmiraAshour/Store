@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Store.Core.DTO.Account;
-using Store.Core.Entities;
-using Store.Core.Interfaces;
+using Store.Core.Entities.UserEntity;
+using Store.Core.Interfaces.ServiceInterfaces;
 using System.Threading.Tasks;
 
 namespace Store.Core.Services
