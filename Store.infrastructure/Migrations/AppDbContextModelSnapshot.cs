@@ -287,7 +287,7 @@ namespace Store.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrdersId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -305,103 +305,11 @@ namespace Store.infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrdersId");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductItemId");
 
                     b.ToTable("OrderItems");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MainImage = "images/Bio Soft Deep Conditioner/bio-soft-deep-conditioner-500g.jpg",
-                            Price = 150m,
-                            ProductItemId = 1,
-                            ProductName = "Bio Soft Deep Conditioner",
-                            Quntity = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MainImage = "images/Bio Soft Shampoo/bio-soft-shampoo-500ml.jpg",
-                            Price = 120m,
-                            ProductItemId = 2,
-                            ProductName = "Bio Soft Shampoo",
-                            Quntity = 5
-                        },
-                        new
-                        {
-                            Id = 3,
-                            MainImage = "images/Dermatique Sun/dermatique-sun-mattifying-fluid-50ml.jpg",
-                            Price = 160m,
-                            ProductItemId = 3,
-                            ProductName = "Dermatique Sun Mattifying Fluid",
-                            Quntity = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            MainImage = "images/Dermatique Hydrating/dermatique-hydrating-cream-100ml.jpg",
-                            Price = 180m,
-                            ProductItemId = 4,
-                            ProductName = "Dermatique Hydrating Cream",
-                            Quntity = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            MainImage = "images/LOreal/loreal-serum-50ml.jpg",
-                            Price = 200m,
-                            ProductItemId = 5,
-                            ProductName = "L’Oreal Serum",
-                            Quntity = 3
-                        },
-                        new
-                        {
-                            Id = 6,
-                            MainImage = "images/LOreal/loreal-conditioner-250ml.jpg",
-                            Price = 140m,
-                            ProductItemId = 6,
-                            ProductName = "L’Oreal Conditioner",
-                            Quntity = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            MainImage = "images/The Ordinary/niacinamide-30ml.jpg",
-                            Price = 220m,
-                            ProductItemId = 7,
-                            ProductName = "The Ordinary Niacinamide",
-                            Quntity = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            MainImage = "images/The Ordinary/hyaluronic-30ml.jpg",
-                            Price = 210m,
-                            ProductItemId = 8,
-                            ProductName = "The Ordinary Hyaluronic Acid",
-                            Quntity = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            MainImage = "images/Olaplex/olaplex-no.3-hair-perfector-100ml.png",
-                            Price = 200m,
-                            ProductItemId = 9,
-                            ProductName = "Olaplex No.3 Hair Perfector",
-                            Quntity = 3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            MainImage = "images/Olaplex/olaplex-no.6-bond-smoother-100ml.png",
-                            Price = 230m,
-                            ProductItemId = 10,
-                            ProductName = "Olaplex No.6 Bond Smoother",
-                            Quntity = 8
-                        });
                 });
 
             modelBuilder.Entity("Store.Core.Entities.Order.Orders", b =>
@@ -416,6 +324,9 @@ namespace Store.infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DeliveryMethodId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -426,16 +337,13 @@ namespace Store.infrastructure.Migrations
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("deliveryMethodId")
-                        .HasColumnType("int");
-
                     b.Property<string>("status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("deliveryMethodId");
+                    b.HasIndex("DeliveryMethodId");
 
                     b.ToTable("Orders");
                 });
@@ -1051,7 +959,6 @@ namespace Store.infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AppUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
@@ -1200,16 +1107,19 @@ namespace Store.infrastructure.Migrations
 
             modelBuilder.Entity("Store.Core.Entities.Order.OrderItem", b =>
                 {
-                    b.HasOne("Store.Core.Entities.Order.Orders", null)
+                    b.HasOne("Store.Core.Entities.Order.Orders", "Order")
                         .WithMany("orderItems")
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Store.Core.Entities.ProductEntity.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });
@@ -1218,7 +1128,7 @@ namespace Store.infrastructure.Migrations
                 {
                     b.HasOne("Store.Core.Entities.Order.DeliveryMethod", "deliveryMethod")
                         .WithMany()
-                        .HasForeignKey("deliveryMethodId")
+                        .HasForeignKey("DeliveryMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1293,7 +1203,6 @@ namespace Store.infrastructure.Migrations
                         .WithMany("Address")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK_AppUser_Address");
 
                     b.Navigation("AppUser");

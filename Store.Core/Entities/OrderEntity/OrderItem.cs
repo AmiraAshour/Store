@@ -24,6 +24,9 @@ namespace Store.Core.Entities.Order
     public string ProductName { get; set; }
     public decimal Price { get; set; }
     public int Quntity { get; set; }
+    public int OrderId { get; set; }
+    public Orders Order { get; set; }
+
 
     [ForeignKey(nameof (ProductItemId))]
     public Product? Product { get; set; }

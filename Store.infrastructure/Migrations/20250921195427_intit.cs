@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Store.infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class intit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -137,7 +137,7 @@ namespace Store.infrastructure.Migrations
                     ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -277,15 +277,15 @@ namespace Store.infrastructure.Migrations
                     shippingAddress_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     shippingAddress_State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    deliveryMethodId = table.Column<int>(type: "int", nullable: false),
+                    DeliveryMethodId = table.Column<int>(type: "int", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_DeliveryMethods_deliveryMethodId",
-                        column: x => x.deliveryMethodId,
+                        name: "FK_Orders_DeliveryMethods_DeliveryMethodId",
+                        column: x => x.DeliveryMethodId,
                         principalTable: "DeliveryMethods",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -347,15 +347,21 @@ namespace Store.infrastructure.Migrations
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Quntity = table.Column<int>(type: "int", nullable: false),
-                    OrdersId = table.Column<int>(type: "int", nullable: true)
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrdersId",
-                        column: x => x.OrdersId,
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Products_ProductItemId",
+                        column: x => x.ProductItemId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -365,8 +371,10 @@ namespace Store.infrastructure.Migrations
                 columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Electronic laptops", "Laptops" },
-                    { 2, "Smart mobile phones", "Phones" }
+                    { 1, "Skin care products", "Skin Care" },
+                    { 2, "Hair care products", "Hair Care" },
+                    { 3, "Makeup and cosmetics", "Makeup" },
+                    { 4, "Body care products", "Body Care" }
                 });
 
             migrationBuilder.InsertData(
@@ -383,8 +391,33 @@ namespace Store.infrastructure.Migrations
                 columns: new[] { "Id", "AverageRating", "CategoryId", "Description", "Name", "NewPrice", "OldPrice", "ReviewCount", "Stock" },
                 values: new object[,]
                 {
-                    { 1, 0.0, 1, "Gaming laptop", "Laptop", 25000m, 0m, 0, 0 },
-                    { 2, 0.0, 2, "Fiction book", "Novel", 150m, 0m, 0, 0 }
+                    { 1, 4.5, 2, "Deep nourishing conditioner 500g", "Bio Soft Deep Conditioner", 150m, 180m, 20, 50 },
+                    { 2, 4.2000000000000002, 1, "Extra lightening sunscreen gel 50gm", "Bobai Extra Lightening Sun Screen", 140m, 160m, 15, 40 },
+                    { 3, 4.7000000000000002, 1, "Mattifying sun fluid 50ml", "Dermatique Sun Mattifying Fluid", 160m, 180m, 30, 60 },
+                    { 4, 4.0, 3, "Tinted lip cheek balm", "Essence Juicy Melon Lip Balm", 80m, 100m, 12, 70 },
+                    { 5, 4.2999999999999998, 1, "Truly skin serum 35ml", "Lebelage Truly Serum", 120m, 140m, 18, 30 },
+                    { 6, 4.0999999999999996, 1, "Eye contour gel 15ml", "Leylak Eye Contour Gel", 110m, 130m, 10, 25 },
+                    { 7, 4.5999999999999996, 3, "Magic retouch 75ml", "Loreal Brown Magic Retouch", 100m, 120m, 25, 80 },
+                    { 8, 4.4000000000000004, 1, "Moisturizing cream 100g", "Moist 1 Cream", 130m, 150m, 40, 100 },
+                    { 9, 4.7999999999999998, 2, "Hair perfector 100ml", "Olaplex No.3 Hair Perfector", 200m, 230m, 35, 45 },
+                    { 10, 4.5, 2, "Argan oil spray", "ORS Argan Oil Spray", 150m, 170m, 22, 55 },
+                    { 11, 4.0, 1, "Black bubble mask", "Purederm Black Bubble Mask", 70m, 90m, 12, 90 },
+                    { 12, 4.5999999999999996, 2, "Follicle booster oil 100ml", "Raw African Follicle Booster Oil", 160m, 190m, 28, 35 },
+                    { 13, 4.2999999999999998, 2, "Shampoo 300ml", "Seropipe Hair Shampoo", 140m, 160m, 19, 60 },
+                    { 14, 4.2000000000000002, 1, "Make-up remover 200ml", "Shaan Make Up Remover", 90m, 110m, 15, 50 },
+                    { 15, 4.4000000000000004, 3, "Boost concealer Acorn", "Sheglam Complexion Boost Concealer", 110m, 130m, 23, 65 },
+                    { 16, 4.2999999999999998, 3, "Hydrating lip blush tint", "Sheglam Jelly Licious Lip Blush", 100m, 120m, 20, 75 },
+                    { 17, 4.2000000000000002, 3, "Liquid blush Petal Talk", "Sheglam Liquid Blush Petal Talk", 95m, 115m, 18, 55 },
+                    { 18, 4.0999999999999996, 3, "Setting powder duo Bisque", "Sheglam Setting Powder Duo", 105m, 125m, 15, 50 },
+                    { 19, 4.5, 3, "Photo focus foundation soft ivory", "Wet n Wild Foundation", 170m, 200m, 26, 70 },
+                    { 20, 4.5999999999999996, 3, "Concealer Sand 20", "Maybelline Fit Me Concealer", 150m, 170m, 30, 65 },
+                    { 21, 4.2000000000000002, 4, "Body milk 300ml", "Shaan Body Milk", 120m, 140m, 18, 60 },
+                    { 22, 4.2999999999999998, 4, "Shower gel 750ml", "Mood Shower Gel", 140m, 160m, 22, 75 },
+                    { 23, 4.5999999999999996, 4, "Perfumed hair & body oil 50ml", "Skin Candy Perfumed Hair Body Oil", 160m, 190m, 25, 40 },
+                    { 24, 4.0, 4, "Roll-on deodorant", "Starville Roll On", 90m, 110m, 12, 100 },
+                    { 25, 4.4000000000000004, 4, "Body lotion 236ml", "Bodylicious Body Lotion", 150m, 170m, 20, 55 },
+                    { 26, 4.0999999999999996, 4, "Body mousse 75ml", "Watsons Body Mousse", 130m, 150m, 14, 45 },
+                    { 27, 4.2000000000000002, 4, "Deodorant cream", "Skin Candy Deodorant Cream", 110m, 130m, 16, 50 }
                 });
 
             migrationBuilder.InsertData(
@@ -392,8 +425,33 @@ namespace Store.infrastructure.Migrations
                 columns: new[] { "Id", "ImageName", "ProductId" },
                 values: new object[,]
                 {
-                    { 1, "laptop1.jpg", 1 },
-                    { 2, "phone1.jpg", 2 }
+                    { 1, "images/Bio Soft Deep Conditioner/bio-soft-deep-conditioner-500g.jpg", 1 },
+                    { 2, "images/Bobai Sun Screen/bobai-extra-lightening-sun-screen-gel-50gm.jpg", 2 },
+                    { 3, "images/Dermatique Sun/dermatique-sun-mattifying-fluid-50ml.jpg", 3 },
+                    { 4, "images/Essence Lip Balm/essence-juicy-melon-tinted-lip-cheek-balm.jpg", 4 },
+                    { 5, "images/Lebelage Serum/lebelage-truly-serum-35ml.jpg", 5 },
+                    { 6, "images/Leylak Eye Gel/leylak-eye-contour-gel-15ml.jpg", 6 },
+                    { 7, "images/Loreal Retouch/loreal-brown-magic-retouch-75ml.png", 7 },
+                    { 8, "images/Moist 1 Cream/moist-1-cream-moisturizing-cream-100g.jpg", 8 },
+                    { 9, "images/Olaplex/olaplex-no.3-hair-perfector-100ml.png", 9 },
+                    { 10, "images/ORS Argan Oil/ors-argan-oil-spray.png", 10 },
+                    { 11, "images/Purederm Mask/purederm-black-bubble-mask.png", 11 },
+                    { 12, "images/Raw African Oil/raw-african-follicle-booster-oil-100ml.jpg", 12 },
+                    { 13, "images/Seropipe Shampoo/seropipe-hair-shampoo-300ml.jpg", 13 },
+                    { 14, "images/Shaan Remover/shaan-make-up-remover-200ml-600x600.jpg", 14 },
+                    { 15, "images/Sheglam Concealer/sheglam-complexation-boost-concealer-acorn.jpg", 15 },
+                    { 16, "images/Sheglam Lip Blush/sheglam-jelly-licious-hydrating-lip-blush-tint-aho.jpg", 16 },
+                    { 17, "images/Sheglam Liquid Blush/sheglam-liquid-blush-petal-talk.jpg", 17 },
+                    { 18, "images/Sheglam Powder/sheglam-setting-powder-duo-bisque-600x601.jpg", 18 },
+                    { 19, "images/Wet n Wild/wet-n-wild-photofocus-foundation-362-soft-ivory.jpg", 19 },
+                    { 20, "images/Maybelline Concealer/maybelline-fit-me-concealer-20-sand.jpg", 20 },
+                    { 21, "images/Shaan Body Milk/shaan-body-milk-300ml.jpg", 21 },
+                    { 22, "images/Mood Shower Gel/mood-shower-gel-750ml.jpg", 22 },
+                    { 23, "images/Skin Candy Oil/skin-candy-perfumed-hair-body-oil-50ml.jpg", 23 },
+                    { 24, "images/Starville Roll On/starville-roll-on.jpg", 24 },
+                    { 25, "images/Bodylicious Lotion/bodylicious-body-lotion-236ml.jpg", 25 },
+                    { 26, "images/Watsons Body Mousse/watsons-body-mousse-75ml.jpg", 26 },
+                    { 27, "images/Skin Candy Deodorant/skin-candy-deodorant-cream.png", 27 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -441,14 +499,19 @@ namespace Store.infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrdersId",
+                name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
-                column: "OrdersId");
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_deliveryMethodId",
+                name: "IX_OrderItems_ProductItemId",
+                table: "OrderItems",
+                column: "ProductItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DeliveryMethodId",
                 table: "Orders",
-                column: "deliveryMethodId");
+                column: "DeliveryMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Photos_ProductId",

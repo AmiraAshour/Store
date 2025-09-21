@@ -10,7 +10,7 @@ namespace Store.Core.Services
 
     public static byte[] GenerateDailyReport(DateTime date, IEnumerable<Orders>? orders, int? newUsersCount)
     {
-      var items = orders?.SelectMany(o => o.orderItems ?? Array.Empty<OrderItem>()).ToList() ?? new List<OrderItem>();
+      var items = orders?.SelectMany(o => o.orderItems ?? new  List<OrderItem>()).ToList() ?? new List<OrderItem>();
 
       return Document.Create(container =>
       {
@@ -90,7 +90,7 @@ namespace Store.Core.Services
 
     public static byte[] GenerateMonthlyReport(DateTime month, IEnumerable<Orders>? orders, int? newUsersCount)
     {
-      var items = orders?.SelectMany(o => o.orderItems ?? Array.Empty<OrderItem>()).ToList() ?? new List<OrderItem>();
+      var items = orders?.SelectMany(o => o.orderItems ?? new List<OrderItem>()).ToList() ?? new List<OrderItem>();
 
       return Document.Create(container =>
       {

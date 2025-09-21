@@ -15,5 +15,6 @@ namespace Store.Core.Interfaces.ServiceInterfaces
 
     Task<IEnumerable<Orders>?> GetOrdersForTodayAsync();
     Task<IEnumerable<Orders>?> GetOrdersForThisMonthAsync();
+    Task<IEnumerable<Orders>?> GetAllOrderUnDeliveredAsunc();
   }
 }

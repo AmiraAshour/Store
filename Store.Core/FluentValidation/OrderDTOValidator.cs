@@ -11,7 +11,6 @@ public class OrderDTOValidator : AbstractValidator<OrderDTO>
         RuleFor(x => x.deliveryMethodId)
             .GreaterThan(0).WithMessage("DeliveryMethodId must be valid.");
 
-        RuleFor(x => x.shipAddress)
-            .NotNull().WithMessage("Shipping address is required.");
+        
     }
 }

@@ -82,6 +82,26 @@ namespace Store.API.Controllers
       return ApiResponseHelper.Success(order);
     }
 
-   
+    /// <summary>
+    /// Retrieve all orders that are not delivered (Admin only).
+    /// </summary>
+    /// <response code="200">Returns the list of undelivered orders</response>
+    /// <response code="404">If no undelivered orders found</response>
+    [HttpGet("admin/get-all-orders")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(
+        Summary = "Get all undelivered orders",
+        Description = "Retrieves all orders that have not yet been delivered. Requires Admin role.")]
+    public async Task<IActionResult> GetAllOrders()
+    {
+      var ordes = await _orderService.GetAllOrderUnDeliveredAsunc();
+      if (ordes == null)
+        return ApiResponseHelper.NotFound("Not found order receved");
+
+      return ApiResponseHelper.Success(ordes);
+    }
+
+
+
   }
 }

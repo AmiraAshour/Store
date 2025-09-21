@@ -11,5 +11,6 @@ namespace Store.Core.Interfaces.RepositoriesInterfaces
     Task <Orders?> UpdateOrderAsync(Orders oreder);
     Task<bool> HasPurchased(string buyerEmail, int productId);
     Task<IEnumerable<Orders>> GetAllOrdersAsync(Expression<Func<Orders, bool>> filter);
+    Task<IEnumerable<Orders>?> GetAllOrderUndeliverdAsync();
   }
 }

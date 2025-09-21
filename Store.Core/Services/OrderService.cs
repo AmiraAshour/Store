@@ -66,7 +66,7 @@ namespace Store.Core.Services
 
       var shiping = _mapper.Map<ShippingAddress>(orderDTO.shipAddress);
 
-      var order = new Orders(BuyerEmail, subtotal, shiping, "", items, deliveryMethod);
+      var order = new Orders(BuyerEmail, subtotal, shiping, "", items, orderDTO.deliveryMethodId);
       await _unitOfWork.OrdersRepository.AddOrederAsync(order);
       await _basketService.ClearBasketAsync(basket.Id);
 
@@ -163,6 +163,11 @@ namespace Store.Core.Services
 
       _logger.LogInformation("Fetching all orders from {FirstDay} to {LastDay}", firstDay, lastDay);
       return await _unitOfWork.OrdersRepository.GetAllOrdersAsync(o => o.OrderDate.Date >= firstDay && o.OrderDate.Date <= lastDay);
+    }
+
+    public async Task<IEnumerable<Orders>?> GetAllOrderUnDeliveredAsunc()
+    {
+      return await _unitOfWork.OrdersRepository.GetAllOrderUndeliverdAsync();
     }
   }
 }

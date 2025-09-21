@@ -45,6 +45,24 @@ namespace Store.infrastructure.Repositories
 
     }
 
+    public async Task<IEnumerable<Orders>?> GetAllOrderUndeliverdAsync()
+    {
+      var orders= await _context.Orders
+        .Include(x => x.orderItems)
+        .Where(x => x.status == Status.PaymentReceived)
+        .ToListAsync();
+
+      foreach (var order in orders)
+      {
+        order.status = Status.Processing;
+      }
+
+      _context.Orders.UpdateRange(orders);
+      await _context.SaveChangesAsync();
+      
+      return orders;
+    }
+
     public async Task<Orders?> UpdateOrderAsync(Orders oreder)
     {
       _context.Update(oreder);
@@ -52,13 +70,13 @@ namespace Store.infrastructure.Repositories
       return oreder;
     }
 
-   
+
     public async Task<bool> HasPurchased(string buyerEmail, int productId)
     {
       return await _context.Orders
          .Include(o => o.orderItems)
          .AnyAsync(o => o.BuyerEmail == buyerEmail &&
-                        o.orderItems.Any(i => i.ProductItemId == productId) && 
+                        o.orderItems.Any(i => i.ProductItemId == productId) &&
                         o.status == Status.PaymentReceived);
     }
   }

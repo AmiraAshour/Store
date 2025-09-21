@@ -13,7 +13,7 @@ namespace Store.Core.Entities.UserEntity
     public string? Street { get; set; }
     public string? State { get; set; }
 
-    public string AppUserId { get; set; }
+    public string? AppUserId { get; set; }
 
     [ForeignKey(nameof(AppUserId))]
     public virtual AppUser AppUser { get; set; }
