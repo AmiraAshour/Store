@@ -1,5 +1,5 @@
 using FluentValidation;
-using Store.Core.DTO.Product;
+using Store.Core.DTO.ProductDTO;
 
 public class ProductDTOValidator : AbstractValidator<ProductDTO>
 {

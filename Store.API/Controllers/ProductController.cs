@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.API.Helper;
-using Store.Core.DTO.Product;
+using Store.Core.DTO.ProductDTO;
 using Store.Core.Interfaces.ServiceInterfaces;
 using Store.Core.Shared;
 using Swashbuckle.AspNetCore.Annotations;
@@ -64,6 +64,25 @@ namespace Store.API.Controllers
       }
       return ApiResponseHelper.Success(product, "Product retrieved successfully.");
     }
+
+    /// <summary>
+    /// Get top-selling products (Public).
+    /// </summary>
+    /// <param name="pageSize">Number of products per page</param>
+    /// <param name="pageNumber">Page number for pagination</param>
+    /// <param name="categoryId">Optional category ID to filter top-selling products</param>
+    /// <response code="200">Returns a paginated list of top-selling products (product details only)</response>
+    [HttpGet("top-selling")]
+    [SwaggerOperation(Summary = "Get top-selling products (Public)",
+                      Description = "Retrieves a paginated list of the top-selling products. Can optionally be filtered by category. Public endpoint returns only product details.")]
+    public async Task<IActionResult> GetTopSelling([FromQuery] int pageSize=20, [FromQuery] int pageNumber=1, [FromQuery] int? categoryId = null)
+    {
+      var result = await _productService.GetTopSellingProductsAsync(pageSize, pageNumber, categoryId);
+      return ApiResponseHelper.Success(result.Select(x => x.Product), "The top product selling");
+    }
+
+
+    //================================Admin======================
 
     /// <summary>
     /// Create a new product (Admin only).
@@ -130,5 +149,25 @@ namespace Store.API.Controllers
       }
       return ApiResponseHelper.Success("", "Product deleted successfully.");
     }
+
+    /// <summary>
+    /// Get top-selling products (Admin only).
+    /// </summary>
+    /// <param name="pageSize">Number of products per page</param>
+    /// <param name="pageNumber">Page number for pagination</param>
+    /// <param name="categoryId">Optional category ID to filter top-selling products</param>
+    /// <response code="200">Returns a paginated list of top-selling products</response>
+    /// <response code="401">If the user is not authorized</response>
+    /// <response code="403">If the user is not in the Admin role</response>
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin/top-selling")]
+    [SwaggerOperation(Summary = "Get top-selling products (Admin)",
+                      Description = "Retrieves a paginated list of the top-selling products. Admins can optionally filter by category.")]
+    public async Task<IActionResult> GetTopSellingForAdmin([FromQuery] int pageSize=20, [FromQuery] int pageNumber=1, [FromQuery] int? categoryId = null)
+    {
+      var result = await _productService.GetTopSellingProductsAsync(pageSize, pageNumber, categoryId);
+      return ApiResponseHelper.Success(result, "The top product selling");
+    }
+
   }
 }

@@ -1,4 +1,4 @@
-﻿using Store.Core.DTO.Product;
+﻿using Store.Core.DTO.ProductDTO;
 using Store.Core.Shared;
 namespace Store.Core.Interfaces.ServiceInterfaces
 {
@@ -51,5 +51,6 @@ namespace Store.Core.Interfaces.ServiceInterfaces
     /// details as stored in the system.</returns>
     Task<ProductDTO?> UpdateProductAsync(UpdateProductDTO? product);
     Task UpdateProductRatingAsync(int productId);
+    Task<IEnumerable<ProductSalesDto>> GetTopSellingProductsAsync(int pageSize , int pageNumber , int? categoryId = null);
   }
 }

@@ -1,6 +1,6 @@
 ﻿
 
-namespace Store.Core.DTO.Product
+namespace Store.Core.DTO.ProductDTO
 {
   public class ProductDTO
   {

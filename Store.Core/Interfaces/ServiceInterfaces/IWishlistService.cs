@@ -1,4 +1,4 @@
-﻿using Store.Core.DTO.Product;
+﻿using Store.Core.DTO.ProductDTO;
 
 namespace Store.Core.Interfaces.ServiceInterfaces
 {

@@ -52,6 +52,7 @@ namespace Store.infrastructure.Repositories
       return oreder;
     }
 
+   
     public async Task<bool> HasPurchased(string buyerEmail, int productId)
     {
       return await _context.Orders

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Store.infrastructure.Data;
 namespace Store.infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250921125345_addSeedDataToOrderItem")]
+    partial class addSeedDataToOrderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -719,326 +722,326 @@ namespace Store.infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AverageRating = 4.5,
+                            AverageRating = 0.0,
                             CategoryId = 2,
                             Description = "Deep nourishing conditioner 500g",
                             Name = "Bio Soft Deep Conditioner",
                             NewPrice = 150m,
-                            OldPrice = 180m,
-                            ReviewCount = 20,
-                            Stock = 50
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 2,
-                            AverageRating = 4.2000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Extra lightening sunscreen gel 50gm",
                             Name = "Bobai Extra Lightening Sun Screen",
                             NewPrice = 140m,
-                            OldPrice = 160m,
-                            ReviewCount = 15,
-                            Stock = 40
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 3,
-                            AverageRating = 4.7000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Mattifying sun fluid 50ml",
                             Name = "Dermatique Sun Mattifying Fluid",
                             NewPrice = 160m,
-                            OldPrice = 180m,
-                            ReviewCount = 30,
-                            Stock = 60
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 4,
-                            AverageRating = 4.0,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Tinted lip cheek balm",
                             Name = "Essence Juicy Melon Lip Balm",
                             NewPrice = 80m,
-                            OldPrice = 100m,
-                            ReviewCount = 12,
-                            Stock = 70
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 5,
-                            AverageRating = 4.2999999999999998,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Truly skin serum 35ml",
                             Name = "Lebelage Truly Serum",
                             NewPrice = 120m,
-                            OldPrice = 140m,
-                            ReviewCount = 18,
-                            Stock = 30
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 6,
-                            AverageRating = 4.0999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Eye contour gel 15ml",
                             Name = "Leylak Eye Contour Gel",
                             NewPrice = 110m,
-                            OldPrice = 130m,
-                            ReviewCount = 10,
-                            Stock = 25
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 7,
-                            AverageRating = 4.5999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Magic retouch 75ml",
                             Name = "Loreal Brown Magic Retouch",
                             NewPrice = 100m,
-                            OldPrice = 120m,
-                            ReviewCount = 25,
-                            Stock = 80
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 8,
-                            AverageRating = 4.4000000000000004,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Moisturizing cream 100g",
                             Name = "Moist 1 Cream",
                             NewPrice = 130m,
-                            OldPrice = 150m,
-                            ReviewCount = 40,
-                            Stock = 100
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 9,
-                            AverageRating = 4.7999999999999998,
+                            AverageRating = 0.0,
                             CategoryId = 2,
                             Description = "Hair perfector 100ml",
                             Name = "Olaplex No.3 Hair Perfector",
                             NewPrice = 200m,
-                            OldPrice = 230m,
-                            ReviewCount = 35,
-                            Stock = 45
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 10,
-                            AverageRating = 4.5,
+                            AverageRating = 0.0,
                             CategoryId = 2,
                             Description = "Argan oil spray",
                             Name = "ORS Argan Oil Spray",
                             NewPrice = 150m,
-                            OldPrice = 170m,
-                            ReviewCount = 22,
-                            Stock = 55
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 11,
-                            AverageRating = 4.0,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Black bubble mask",
                             Name = "Purederm Black Bubble Mask",
                             NewPrice = 70m,
-                            OldPrice = 90m,
-                            ReviewCount = 12,
-                            Stock = 90
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 12,
-                            AverageRating = 4.5999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 2,
                             Description = "Follicle booster oil 100ml",
                             Name = "Raw African Follicle Booster Oil",
                             NewPrice = 160m,
-                            OldPrice = 190m,
-                            ReviewCount = 28,
-                            Stock = 35
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 13,
-                            AverageRating = 4.2999999999999998,
+                            AverageRating = 0.0,
                             CategoryId = 2,
                             Description = "Shampoo 300ml",
                             Name = "Seropipe Hair Shampoo",
                             NewPrice = 140m,
-                            OldPrice = 160m,
-                            ReviewCount = 19,
-                            Stock = 60
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 14,
-                            AverageRating = 4.2000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 1,
                             Description = "Make-up remover 200ml",
                             Name = "Shaan Make Up Remover",
                             NewPrice = 90m,
-                            OldPrice = 110m,
-                            ReviewCount = 15,
-                            Stock = 50
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 15,
-                            AverageRating = 4.4000000000000004,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Boost concealer Acorn",
                             Name = "Sheglam Complexion Boost Concealer",
                             NewPrice = 110m,
-                            OldPrice = 130m,
-                            ReviewCount = 23,
-                            Stock = 65
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 16,
-                            AverageRating = 4.2999999999999998,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Hydrating lip blush tint",
                             Name = "Sheglam Jelly Licious Lip Blush",
                             NewPrice = 100m,
-                            OldPrice = 120m,
-                            ReviewCount = 20,
-                            Stock = 75
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 17,
-                            AverageRating = 4.2000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Liquid blush Petal Talk",
                             Name = "Sheglam Liquid Blush Petal Talk",
                             NewPrice = 95m,
-                            OldPrice = 115m,
-                            ReviewCount = 18,
-                            Stock = 55
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 18,
-                            AverageRating = 4.0999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Setting powder duo Bisque",
                             Name = "Sheglam Setting Powder Duo",
                             NewPrice = 105m,
-                            OldPrice = 125m,
-                            ReviewCount = 15,
-                            Stock = 50
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 19,
-                            AverageRating = 4.5,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Photo focus foundation soft ivory",
                             Name = "Wet n Wild Foundation",
                             NewPrice = 170m,
-                            OldPrice = 200m,
-                            ReviewCount = 26,
-                            Stock = 70
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 20,
-                            AverageRating = 4.5999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 3,
                             Description = "Concealer Sand 20",
                             Name = "Maybelline Fit Me Concealer",
                             NewPrice = 150m,
-                            OldPrice = 170m,
-                            ReviewCount = 30,
-                            Stock = 65
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 21,
-                            AverageRating = 4.2000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Body milk 300ml",
                             Name = "Shaan Body Milk",
                             NewPrice = 120m,
-                            OldPrice = 140m,
-                            ReviewCount = 18,
-                            Stock = 60
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 22,
-                            AverageRating = 4.2999999999999998,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Shower gel 750ml",
                             Name = "Mood Shower Gel",
                             NewPrice = 140m,
-                            OldPrice = 160m,
-                            ReviewCount = 22,
-                            Stock = 75
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 23,
-                            AverageRating = 4.5999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Perfumed hair & body oil 50ml",
                             Name = "Skin Candy Perfumed Hair Body Oil",
                             NewPrice = 160m,
-                            OldPrice = 190m,
-                            ReviewCount = 25,
-                            Stock = 40
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 24,
-                            AverageRating = 4.0,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Roll-on deodorant",
                             Name = "Starville Roll On",
                             NewPrice = 90m,
-                            OldPrice = 110m,
-                            ReviewCount = 12,
-                            Stock = 100
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 25,
-                            AverageRating = 4.4000000000000004,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Body lotion 236ml",
                             Name = "Bodylicious Body Lotion",
                             NewPrice = 150m,
-                            OldPrice = 170m,
-                            ReviewCount = 20,
-                            Stock = 55
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 26,
-                            AverageRating = 4.0999999999999996,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Body mousse 75ml",
                             Name = "Watsons Body Mousse",
                             NewPrice = 130m,
-                            OldPrice = 150m,
-                            ReviewCount = 14,
-                            Stock = 45
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         },
                         new
                         {
                             Id = 27,
-                            AverageRating = 4.2000000000000002,
+                            AverageRating = 0.0,
                             CategoryId = 4,
                             Description = "Deodorant cream",
                             Name = "Skin Candy Deodorant Cream",
                             NewPrice = 110m,
-                            OldPrice = 130m,
-                            ReviewCount = 16,
-                            Stock = 50
+                            OldPrice = 0m,
+                            ReviewCount = 0,
+                            Stock = 0
                         });
                 });
 

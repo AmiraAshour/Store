@@ -6,10 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Core.DTO.Product
+namespace Store.Core.DTO.ProductDTO
 {
-  public class AddProductDTO
+  public class UpdateProductDTO
   {
+    [Required(ErrorMessage = "Id is required.")]
+    public int Id { get; set; }
+
 
     [Required(ErrorMessage = "Name is required.")]
     [StringLength(100, ErrorMessage = "Name must be less than 100 characters.")]
@@ -21,7 +24,7 @@ namespace Store.Core.DTO.Product
     [Required(ErrorMessage = "Price is required.")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public decimal NewPrice { get; set; }
-    
+
     [Required(ErrorMessage = "Price is required.")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
     public decimal OldPrice { get; set; }
@@ -29,6 +32,6 @@ namespace Store.Core.DTO.Product
     [Required(ErrorMessage = "Category Name is required.")]
     public string? CategoryId { get; set; }
 
-    public IFormFileCollection  Photos { get; set; }
+    public IFormFileCollection Photos { get; set; }
   }
 }

@@ -1,4 +1,6 @@
 ﻿using Store.Core.Entities.BasketEntity;
+using Store.Core.Entities.ProductEntity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Store.Core.Entities.Order
 {
@@ -22,6 +24,9 @@ namespace Store.Core.Entities.Order
     public string ProductName { get; set; }
     public decimal Price { get; set; }
     public int Quntity { get; set; }
+
+    [ForeignKey(nameof (ProductItemId))]
+    public Product? Product { get; set; }
 
   }
 }

@@ -2,7 +2,7 @@
 using FuzzySharp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Store.Core.DTO.Product;
+using Store.Core.DTO.ProductDTO;
 using Store.Core.Entities.ProductEntity;
 using Store.Core.Interfaces.ServiceInterfaces;
 using Store.Core.Shared;
@@ -68,6 +68,13 @@ namespace Store.Core.Services
           .Take(param.pageSize);
 
       return _mapper.Map<IEnumerable<ProductDTO>>(products);
+    }
+    public async Task<IEnumerable<ProductSalesDto>> GetTopSellingProductsAsync(int pageSize, int pageNumber , int? categoryId=null)
+    {
+      var query = _unitOfWork.ProductRepository.GetTopSellingProductsAsync(categoryId);
+      
+      return await query.Skip((pageNumber - 1) * pageSize)
+          .Take(pageSize).ToListAsync();
     }
 
     public async Task<ProductDTO?> GetProductByIdAsync(int id)
