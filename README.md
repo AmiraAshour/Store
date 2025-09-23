@@ -138,37 +138,37 @@ Stripe payment processing
 - **Reports:** `/api/reports`  
 Daily/monthly PDF reports (admin only)
 
----
+```
+
 
 ## Project Structure
 
 Store.API/
- ??? Controllers/           # API controllers (Account, Products, Orders, etc.)
- ??? Middleware/            # Custom middleware (exception handling, logging, etc.)
- ??? Properties/            # Project properties and settings
- ??? Program.cs             # Application entry point and configuration
- ??? appsettings.json       # Main configuration file
+ ├── Controllers/           # API controllers (Account, Products, Orders, etc.)
+ ├── Middleware/            # Custom middleware (exception handling, logging, etc.)
+ ├── Properties/            # Project properties and settings
+ ├── Program.cs             # Application entry point and configuration
+ ├── appsettings.json       # Main configuration file
 
 Store.Core/
- ??? DTO/                   # Data Transfer Objects
- ??? Entities/              # Domain entities (Product, Category, User, Order, etc.)
- ??? Interfaces/            # Service and repository interfaces
- ??? Services/              # Business logic / service implementations
- ??? Shared/                # Shared utilities, enums, helpers
- ??? FluentValidation/      # Validators for entities and DTOs
+ ├── DTO/                   # Data Transfer Objects
+ ├── Entities/              # Domain entities (Product, Category, User, Order, etc.)
+ ├── Interfaces/            # Service and repository interfaces
+ ├── Services/              # Business logic / service implementations
+ ├── Shared/                # Shared utilities, enums, helpers
+ ├── FluentValidation/      # Validators for entities and DTOs
 
 Store.Infrastructure/
- ??? Data/                  # DbContext, migrations, database seeding
- ??? Repositories/          # Repository implementations
- ??? Config/                # Entity configurations
+ ├── Data/                  # DbContext, migrations, database seeding
+ ├── Repositories/          # Repository implementations
+ ├── Config/                # Entity configurations
 
 wwwroot/
- ??? images/                # Static files (uploads, product photos, etc.)
+ ├── images/                # Static files (uploads, product photos, etc.)
 
 README.md                   # Project documentation
 
-
----
+```
 
 ## Contributing
 
