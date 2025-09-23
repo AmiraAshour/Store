@@ -71,7 +71,7 @@ Store API is a robust e-commerce backend built with ASP.NET Core (.NET 8), desig
 - **Swagger UI** ? [https://my-store.runasp.net/swagger/index.html](https://my-store.runasp.net/swagger/index.html)  
   Interactive API documentation with ability to test endpoints.
 
-- **ERD (Entity Relationship Diagram)**  [https://www.mermaidchart.com/app/projects/e83481e1-0ccf-49a4-a8c4-a78e722e996f/diagrams/e6f2cc00-dae2-46ad-981b-d57e32488218/version/v0.1/edit] (https://www.mermaidchart.com/app/projects/e83481e1-0ccf-49a4-a8c4-a78e722e996f/diagrams/e6f2cc00-dae2-46ad-981b-d57e32488218/version/v0.1/edit)
+- **ERD (Entity Relationship Diagram)**  https://www.mermaidchart.com/app/projects/e83481e1-0ccf-49a4-a8c4-a78e722e996f/diagrams/e6f2cc00-dae2-46ad-981b-d57e32488218/version/v0.1/edit
   The database schema is documented using **Mermaid** chart for better visualization:
 
 ## Getting Started
