@@ -28,17 +28,17 @@ app.UseStaticFiles();
 
 app.UseHangfireDashboard("/dashboard");
 
-RecurringJob.AddOrUpdate<ReportService>(
-    "daily-report-job",
-    service => service.SendDailyReportAsync(),
-    "* 6 * * *"
-);
+//RecurringJob.AddOrUpdate<ReportService>(
+//    "daily-report-job",
+//    service => service.SendDailyReportAsync(),
+//    "* 6 * * *"
+//);
 
-RecurringJob.AddOrUpdate<ReportService>(
-    "monthly-report-job",
-    service => service.SendMonthlyReportAsync(),
-    "0 9 1 * *" 
-);
+//RecurringJob.AddOrUpdate<ReportService>(
+//    "monthly-report-job",
+//    service => service.SendMonthlyReportAsync(),
+//    "0 9 1 * *" 
+//);
 
 app.UseCors("CORSPolicy");
 
